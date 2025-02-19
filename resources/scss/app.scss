@@ -1,0 +1,20 @@
+@use "bootstrap/scss/bootstrap";
+
+// Importar Bootstrap con SCSS
+@import "bootstrap/scss/bootstrap";
+
+// Reset adicional para eliminar márgenes y paddings por defecto
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* // Estilos globales
+html,
+body {
+    height: auto;
+    width: auto;
+    font-family: 'Inter', sans-serif; // Personaliza la fuente
+    background-color: #f8f9fa; // Color de fondo general
+} */
