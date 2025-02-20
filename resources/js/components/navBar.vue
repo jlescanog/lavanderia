@@ -27,7 +27,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page"
                             ><router-link
-                                to="/"
+                                to="/home"
                                 class="text-decoration-none link-light"
                                 >Home</router-link
                             ></a
@@ -42,7 +42,7 @@
                             ></a
                         >
                     </li>
-                    <!-- <li class="nav-item dropdown">
+                    <li class="nav-item dropdown">
                         <a
                             class="nav-link dropdown-toggle"
                             href="#"
@@ -50,11 +50,17 @@
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            Dropdown
+                            Admin Panel
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#"
+                                    ><router-link
+                                        to="/crudOrders"
+                                        class="text-decoration-none link-light"
+                                        >CRUD Ordenes</router-link
+                                    ></a
+                                >
                             </li>
                             <li>
                                 <a class="dropdown-item" href="#"
@@ -68,7 +74,7 @@
                                 >
                             </li>
                         </ul>
-                    </li> -->
+                    </li>
                 </ul>
                 <!-- <form class="d-flex" role="search">
                     <input
