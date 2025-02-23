@@ -13,6 +13,7 @@ const routes = [
     { path: '/formOrders', component: formOrders},
     { path: '/managementOrders', component: managementOrders},
     { path: '/', component: home },
+    { path: '/:pathMatch(.*)*', redirect: '/' }
 ];
 
 const router = createRouter({
