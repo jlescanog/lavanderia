@@ -1,6 +1,6 @@
 <template>
     <div class="container mt-4">
-        <h2 class="mb-4">Gestión de Prendas</h2>
+        <h2 class="mb-4">Gestión de Ordenes</h2>
 
         <!-- Formulario de Registro -->
         <form
@@ -12,7 +12,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Edredones</label>
                     <input
-                        v-model.number="nuevaPrenda.edredones"
+                        v-model.number="nuevaOrden.edredones"
                         type="number"
                         class="form-control"
                         required
@@ -22,7 +22,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Sábanas</label>
                     <input
-                        v-model.number="nuevaPrenda.sabanas"
+                        v-model.number="nuevaOrden.sabanas"
                         type="number"
                         class="form-control"
                         required
@@ -32,7 +32,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Colores de la ropa</label>
                     <select
-                        v-model="nuevaPrenda.colorRopa"
+                        v-model="nuevaOrden.colorRopa"
                         class="form-select"
                         required
                     >
@@ -47,7 +47,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Número de Prendas</label>
                     <input
-                        v-model.number="nuevaPrenda.numPrendas"
+                        v-model.number="nuevaOrden.numPrendas"
                         type="number"
                         class="form-control"
                         required
@@ -57,7 +57,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Tipo de Lavado</label>
                     <select
-                        v-model="nuevaPrenda.tipoLavado"
+                        v-model="nuevaOrden.tipoLavado"
                         class="form-select"
                         required
                     >
@@ -70,7 +70,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Planchado</label>
                     <select
-                        v-model="nuevaPrenda.planchado"
+                        v-model="nuevaOrden.planchado"
                         class="form-select"
                         required
                     >
@@ -84,7 +84,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Tipo de Pago</label>
                     <select
-                        v-model="nuevaPrenda.tipoPago"
+                        v-model="nuevaOrden.tipoPago"
                         class="form-select"
                         required
                     >
@@ -99,7 +99,7 @@
                 <div class="col-md-4">
                     <label class="form-label">Código Ticket</label>
                     <input
-                        v-model="nuevaPrenda.codigoTicket"
+                        v-model="nuevaOrden.codigoTicket"
                         type="text"
                         class="form-control"
                         required
@@ -111,7 +111,7 @@
                     <label class="form-label">Fecha de Ingreso</label>
                     <input
                         id="inputDate"
-                        v-model="nuevaPrenda.fechaIngreso"
+                        v-model="nuevaOrden.fechaIngreso"
                         type="date"
                         class="form-control"
                         required
@@ -139,9 +139,9 @@
             </button>
         </form>
 
-        <!-- Lista de Prendas -->
-        <div v-if="prendas.length">
-            <h3>Lista de Prendas</h3>
+        <!-- Lista de Ordenes -->
+        <div v-if="ordenesArray.length">
+            <h3>Lista de Ordenes</h3>
             <table class="table table-striped container text-center">
                 <thead>
                     <tr>
@@ -159,23 +159,23 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="(prenda, index) in prendas"
-                        :key="prenda.codigoTicket"
+                        v-for="(orden, index) in ordenesArray"
+                        :key="orden.codigoTicket"
                     >
-                        <td>{{ prenda.codigoTicket }}</td>
-                        <td>{{ prenda.edredones }}</td>
-                        <td>{{ prenda.sabanas }}</td>
-                        <td>{{ prenda.colorRopa }}</td>
-                        <td>{{ prenda.numPrendas }}</td>
-                        <td>{{ prenda.tipoLavado }}</td>
-                        <td>{{ prenda.planchado }}</td>
-                        <td>{{ prenda.tipoPago }}</td>
-                        <td>{{ prenda.fechaIngreso }}</td>
+                        <td>{{ orden.codigoTicket }}</td>
+                        <td>{{ orden.edredones }}</td>
+                        <td>{{ orden.sabanas }}</td>
+                        <td>{{ orden.colorRopa }}</td>
+                        <td>{{ orden.numPrendas }}</td>
+                        <td>{{ orden.tipoLavado }}</td>
+                        <td>{{ orden.planchado }}</td>
+                        <td>{{ orden.tipoPago }}</td>
+                        <td>{{ orden.fechaIngreso }}</td>
                         <td>
                             <div class="row justify-content-around">
                                 <button
                                     class="d-flex btn btn-primary btn-sm col-4 align-items-center justify-content-center"
-                                    @click="editarPrenda(index)"
+                                    @click="editarOrden(index)"
                                     tittle="Editar"
                                 >
                                     <svg
@@ -189,10 +189,11 @@
                                         <path
                                             d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"
                                         />
-                                    </svg></button
-                                ><button
+                                    </svg>
+                                </button>
+                                <button
                                     class="d-flex btn btn-danger btn-sm col-4 align-items-center justify-content-center"
-                                    @click="eliminarPrenda(index)"
+                                    @click="eliminarOrden(index)"
                                     tittle="Eliminar"
                                 >
                                     <svg
@@ -235,8 +236,8 @@ const formattedDate = date.toISOString().split("T")[0];
 
 //Variables Reactivas
 const codigoTicket = ref(1);
-const prendas = ref([]);
-const nuevaPrenda = ref({
+const ordenesArray = ref([]);
+const nuevaOrden = ref({
     edredones: 0,
     sabanas: 0,
     colorRopa: "blanca",
@@ -247,60 +248,60 @@ const nuevaPrenda = ref({
     codigoTicket: String(codigoTicket.value).padStart(4, 0),
     fechaIngreso: formattedDate,
 });
-const prendaTemporal = ref({});
+const ordenTemporal = ref({});
 const modoEdicion = ref(false);
 const codigoEdicion = ref(null);
 
 //Funciones CRUD
-const agregarPrenda = () => {
-    prendas.value.push({ ...nuevaPrenda.value });
+const agregarOrden = () => {
+    ordenesArray.value.push({ ...nuevaOrden.value });
     codigoTicket.value++;
     limpiarFormulario();
 
     guardarLocalStorage("codigoTicket", codigoTicket);
-    guardarLocalStorage("arrayPrendas", prendas);
+    guardarLocalStorage("ordenesArray", ordenesArray);
 };
 
-const editarPrenda = (index) => {
+const editarOrden = (index) => {
     modoEdicion.value = true;
-    prendaTemporal.value = { ...prendas.value[index] };
-    codigoEdicion.value = prendaTemporal.value.codigoTicket;
-    nuevaPrenda.value = { ...prendaTemporal.value };
+    ordenTemporal.value = { ...ordenesArray.value[index] };
+    codigoEdicion.value = ordenTemporal.value.codigoTicket;
+    nuevaOrden.value = { ...ordenTemporal.value };
 };
 
-const actualizarPrenda = () => {
+const actualizarOrden = () => {
     if (codigoEdicion.value !== null) {
-        prendaTemporal.value = { ...nuevaPrenda.value };
-        const codigoPrenda = prendas.value.findIndex(
-            (e) => e.codigoTicket === prendaTemporal.value.codigoTicket
+        ordenTemporal.value = { ...nuevaOrden.value };
+        const codigoOrden = ordenesArray.value.findIndex(
+            (e) => e.codigoTicket === ordenTemporal.value.codigoTicket
         );
-        prendas.value[codigoPrenda] = { ...prendaTemporal.value };
+        ordenesArray.value[codigoOrden] = { ...ordenTemporal.value };
 
         limpiarFormulario();
-        guardarLocalStorage("arrayPrendas", prendas);
+        guardarLocalStorage("ordenesArray", ordenesArray);
     }
 };
 
-const eliminarPrenda = (index) => {
-    prendas.value.splice(index, 1);
-    guardarLocalStorage("arrayPrendas", prendas);
+const eliminarOrden = (index) => {
+    ordenesArray.value.splice(index, 1);
+    guardarLocalStorage("ordenesArray", ordenesArray);
 };
 
 //Funciones Auxiliares
 const formularioValido = computed(() => {
     return (
-        nuevaPrenda.value.edredones >= 0 &&
-        nuevaPrenda.value.sabanas >= 0 &&
-        nuevaPrenda.value.numPrendas > 0 &&
-        nuevaPrenda.value.colorRopa &&
-        nuevaPrenda.value.tipoLavado &&
-        nuevaPrenda.value.planchado &&
-        nuevaPrenda.value.tipoPago
+        nuevaOrden.value.edredones >= 0 &&
+        nuevaOrden.value.sabanas >= 0 &&
+        nuevaOrden.value.numPrendas > 0 &&
+        nuevaOrden.value.colorRopa &&
+        nuevaOrden.value.tipoLavado &&
+        nuevaOrden.value.planchado &&
+        nuevaOrden.value.tipoPago
     );
 });
 
 const limpiarFormulario = () => {
-    nuevaPrenda.value = {
+    nuevaOrden.value = {
         edredones: 0,
         sabanas: 0,
         colorRopa: "blanca",
@@ -321,16 +322,18 @@ const cancelarEdicion = () => {
 
 const eventoForm = () => {
     if (modoEdicion.value) {
-        actualizarPrenda();
+        actualizarOrden();
     } else {
-        agregarPrenda();
+        agregarOrden();
     }
 };
 
 const reiniciarTickes = () => {
     codigoTicket.value = 1;
-    prendas.value = [];
+    ordenesArray.value = [];
     limpiarFormulario();
+
+    guardarLocalStorage("ordenesArray", ordenesArray);
     guardarLocalStorage("codigoTicket", codigoTicket);
 };
 
@@ -350,7 +353,7 @@ const cargarItemLocalStorage = (name, item) => {
 };
 
 onMounted(() => {
-    cargarItemLocalStorage("arrayPrendas", prendas);
+    cargarItemLocalStorage("ordenesArray", ordenesArray);
     cargarItemLocalStorage("codigoTicket", codigoTicket);
     limpiarFormulario();
 });
