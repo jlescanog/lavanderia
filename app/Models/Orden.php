@@ -1,0 +1,39 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+
+class Orden extends Model
+{
+    use HasFactory;
+
+    protected $table = 'ordenes'; // Nombre de la tabla en la BD
+
+    protected $primaryKey = 'IdOrden'; // Clave primaria
+
+    protected $fillable = [
+        'IdCliente',
+        'IdEmpleado',
+        'FechaOrden',
+        'Estado',
+        'PrecioTotal',
+        'ACuenta',
+        'Saldo'
+    ];
+
+    public $timestamps = true;
+
+    // Relaciones
+    public function cliente()
+    {
+        return $this->belongsTo(Cliente::class, 'IdCliente');
+    }
+
+    public function empleado()
+    {
+        return $this->belongsTo(Empleado::class, 'IdEmpleado');
+    }
+}

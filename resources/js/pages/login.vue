@@ -8,7 +8,12 @@
                 <label class="form-label" for="form2Example1"
                     >Correo Electrónico</label
                 >
-                <input type="email" id="form2Example1" class="form-control" />
+                <input
+                    type="email"
+                    id="form2Example1"
+                    class="form-control"
+                    placeholder="usuario@correo.com"
+                />
             </div>
 
             <!-- Password input -->
@@ -18,6 +23,7 @@
                     type="password"
                     id="form2Example2"
                     class="form-control"
+                    placeholder="Ingrese su contraseña"
                 />
             </div>
 

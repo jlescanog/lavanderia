@@ -24,7 +24,7 @@
                         <label class="form-label"> Colores de Prendas </label>
                         <ul class="w-100 list-group mt-1">
                             <li
-                                class="list-group-item p-0 border border-0"
+                                class="list-group-item p-0 border-0"
                                 data-bs-toggle="collapse"
                                 href="#collapseColoresRopa"
                                 role="button"
@@ -319,10 +319,14 @@ const nuevaOrden = ref({
     tipoPago: "yape",
     montoPago: 0,
 
+    //Estado
+    estadoOrden: "Pendiente",
+
     codigoTicket: String(codigoTicket.value).padStart(4, 0),
     fechaIngreso: formattedDate,
 });
-const toggleColor = ref(true);
+
+const toggleColor = ref(false);
 
 //Funciones CRUD
 const agregarOrden = () => {
@@ -376,16 +380,12 @@ const limpiarFormulario = () => {
         tipoPago: "yape",
         montoPago: 0,
 
+        //Estado
+        estadoOrden: "pendiente",
+
         codigoTicket: String(codigoTicket.value).padStart(4, 0),
         fechaIngreso: formattedDate,
     };
-};
-
-const reiniciarTickes = () => {
-    codigoTicket.value = 1;
-    ordenesArray.value = [];
-    limpiarFormulario();
-    guardarLocalStorage("codigoTicket", codigoTicket);
 };
 
 const numPrendas = computed(() => {
