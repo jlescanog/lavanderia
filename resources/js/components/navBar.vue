@@ -27,7 +27,7 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page"
                             ><router-link
-                                to="/"
+                                to="/dashboard"
                                 class="text-decoration-none link-light"
                                 >Home</router-link
                             ></a
@@ -39,6 +39,15 @@
                                 to="/login"
                                 class="text-decoration-none link-light"
                                 >Login</router-link
+                            ></a
+                        >
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"
+                            ><router-link
+                                to="/register"
+                                class="text-decoration-none link-light"
+                                >Register</router-link
                             ></a
                         >
                     </li>

@@ -2,7 +2,7 @@
     <div
         class="container pt-5 d-flex justify-content-center h-100 align-items-center"
     >
-        <form>
+        <form @submit.prevent="login">
             <!-- Email input -->
             <div data-mdb-input-init class="form-outline mb-4">
                 <label class="form-label" for="form2Example1"
@@ -56,7 +56,7 @@
             <!-- Submit button -->
             <div class="d-flex justify-content-center">
                 <button
-                    type="button"
+                    type="submit"
                     data-mdb-button-init
                     data-mdb-ripple-init
                     class="btn btn-primary btn-block mb-4"
@@ -72,4 +72,33 @@
     </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { ref } from "vue";
+import axios from "axios";
+import { useRouter } from "vue-router";
+
+const email = ref("");
+const password = ref("");
+const router = useRouter();
+
+const login = async () => {
+    try {
+        const response = await axios.post("http://localhost:8000/api/login", {
+            email: email.value,
+            password: password.value,
+        });
+
+        // Guardar token en localStorage
+        localStorage.setItem("token", response.data.token);
+
+        // Redireccionar al dashboard o página protegida
+        router.push("/dashboard");
+    } catch (error) {
+        console.error(error);
+        alert(
+            "Error al iniciar sesión: " +
+                (error.response?.data?.message || "Error desconocido")
+        );
+    }
+};
+</script>
