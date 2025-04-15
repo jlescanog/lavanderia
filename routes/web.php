@@ -1,18 +1,35 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
-Route::get('/login', function () {
-    return view('pages/app');
-})->name('login');
-
+use App\Http\Controllers\AuthController;
 
 Route::get('/', function () {
-    return redirect('/dashboard');
+    return redirect('/home');
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('pages/app');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', function () {
+        return view('pages/home');
+    });
+
+    Route::get('/formOrders', function () {
+        return view('pages/formOrders');
+    });
+
+    Route::get('/managementOrders', function () {
+        return view('pages/managementOrders');
     });
 });
+
+Route::get('/login', function () {
+    return view('auth/login');
+})->name('login');
+
+Route::get('/register', function () {
+    return view('auth/register');
+});
+
+Route::post('/register', [AuthController::class, 'register'])->name('register');
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);

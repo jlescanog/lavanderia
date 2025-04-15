@@ -1,8 +1,8 @@
 <template>
     <div class="container-fluid mt-5">
         <div class="row justify-content-around mt-5">
-            <router-link
-                to="/login"
+            <a
+                href="/login"
                 class="text-decoration-none card-link d-flex col-2 text-center align-items-center justify-content-space-around mt-3"
                 style="width: 18rem"
             >
@@ -25,9 +25,9 @@
                         <p class="fs-4 fw-bold">Inicio de Sesión</p>
                     </div>
                 </button>
-            </router-link>
-            <router-link
-                to="/formOrders"
+            </a>
+            <a
+                href="/formOrders"
                 class="text-decoration-none card-link col-2 d-flex text-center align-items-center justify-content-space-around mt-3 border border-0"
                 style="width: 18rem"
             >
@@ -50,9 +50,9 @@
                         <p class="fs-4 fw-bold">Formulario de Ordenes</p>
                     </div>
                 </button>
-            </router-link>
-            <router-link
-                to="/managementOrders"
+            </a>
+            <a
+                href="/managementOrders"
                 class="text-decoration-none card-link d-flex col-2 text-center align-items-center justify-content-space-around mt-3"
                 style="width: 18rem"
             >
@@ -78,12 +78,16 @@
                         <p class="fs-4 fw-bold">Gestión de Ordenes</p>
                     </div>
                 </button>
-            </router-link>
+            </a>
         </div>
     </div>
 </template>
 
-<script></script>
+<script>
+export default {
+    name: "Home",
+};
+</script>
 
 <style scoped>
 /* Hace que el enlace herede el color del botón */

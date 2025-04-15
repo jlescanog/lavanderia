@@ -1,16 +1,17 @@
 <template>
     <div
-        class="container pt-5 d-flex justify-content-center h-100 align-items-center"
+        class="container d-flex justify-content-center h-100 align-items-center"
     >
         <form @submit.prevent="login">
             <!-- Email input -->
             <div data-mdb-input-init class="form-outline mb-4">
-                <label class="form-label" for="form2Example1"
+                <label class="form-label" for="emailInput"
                     >Correo Electrónico</label
                 >
                 <input
+                    v-model="email"
                     type="email"
-                    id="form2Example1"
+                    id="emailInput"
                     class="form-control"
                     placeholder="usuario@correo.com"
                 />
@@ -18,10 +19,11 @@
 
             <!-- Password input -->
             <div data-mdb-input-init class="form-outline mb-4">
-                <label class="form-label" for="form2Example2">Contraseña</label>
+                <label class="form-label" for="passwordInput">Contraseña</label>
                 <input
+                    v-model="password"
                     type="password"
-                    id="form2Example2"
+                    id="passwordInput"
                     class="form-control"
                     placeholder="Ingrese su contraseña"
                 />
@@ -38,10 +40,10 @@
                             class="form-check-input"
                             type="checkbox"
                             value=""
-                            id="form2Example31"
+                            id="checkboxLogin"
                             checked
                         />
-                        <label class="form-check-label" for="form2Example31">
+                        <label class="form-check-label" for="checkboxLogin">
                             Recordarme
                         </label>
                     </div>
@@ -66,7 +68,9 @@
             </div>
 
             <div class="text-center">
-                <p>¿No tienes cuenta? Registrate <a href="#!">Aqui</a></p>
+                <p>
+                    ¿No tienes cuenta? Registrate <a href="/register">Aqui</a>
+                </p>
             </div>
         </form>
     </div>
@@ -75,24 +79,26 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { useRouter } from "vue-router";
 
 const email = ref("");
 const password = ref("");
-const router = useRouter();
+
+axios.defaults.withCredentials = true;
 
 const login = async () => {
     try {
-        const response = await axios.post("http://localhost:8000/api/login", {
-            email: email.value,
+        console.log("Email:", email.value);
+        console.log("Password:", password.value);
+
+        await axios.get("/sanctum/csrf-cookie");
+
+        await axios.post("/login", {
+            correoElectronico: email.value,
             password: password.value,
         });
 
-        // Guardar token en localStorage
-        localStorage.setItem("token", response.data.token);
-
-        // Redireccionar al dashboard o página protegida
-        router.push("/dashboard");
+        // Redireccionar al home o página protegida
+        window.location.href = "/home";
     } catch (error) {
         console.error(error);
         alert(

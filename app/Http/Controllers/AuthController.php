@@ -2,63 +2,67 @@
 
 namespace App\Http\Controllers;
 
-
-
-use App\Models\User;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
+
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users,email',
+        $request->validate([
+            'nombre' => 'required|string|max:255',
+            'correoElectronico' => 'required|string|email|max:255|unique:clientes',
+            'telefono' => 'required|string|max:255',
+            'direccion' => 'required|string',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+        $cliente  = Cliente::create([
+            'nombre' => $request->nombre,
+            'correoElectronico' => $request->correoElectronico,
+            'telefono' => $request->telefono,
+            'direccion' => $request->direccion,
+            'password' => Hash::make($request->password),
         ]);
 
-        $token = $user->createToken('apitoken')->plainTextToken;
+        Auth::login($cliente);
 
-        return response()->json([
-            'user' => $user,
-            'token' => $token,
-        ]);
+        return response()->json(['message' => 'Cliente registrado exitosamente!'], 201);
     }
 
     public function login(Request $request)
     {
+        Log::info('Datos recibidos', $request->all());
+
         $credentials = $request->validate([
-            'email' => 'required|string|email',
+            'correoElectronico' => 'required|string|email',
             'password' => 'required|string',
         ]);
 
-        $user = User::where('email', $credentials['email'])->first();
+        $cliente = Cliente::where('correoElectronico', $credentials['correoElectronico'])->first();
 
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Las credenciales son incorrectas.'],
-            ]);
+        if (!$cliente) {
+            return response()->json(['message' => 'El usuario no existe.'], 404);
         }
 
-        $token = $user->createToken('apitoken')->plainTextToken;
+        if (!Hash::check($credentials['password'], $cliente->password)) {
+            return response()->json(['message' => 'Contraseña incorrecta.'], 401);
+        }
 
         return response()->json([
-            'user' => $user,
-            'token' => $token,
+            'Cliente' => $cliente,
         ]);
     }
+
+
     public function logout(Request $request)
     {
-        $request->user()->tokens()->delete();
-
-        return response()->json(['message' => 'Logout exitoso']);
+        Auth::logout();
+        return response()->json(['message' => 'Desconectado con éxito']);
     }
 }

@@ -8,11 +8,12 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('clientes', function (Blueprint $table) {
-            $table->id('IdCliente');
-            $table->string('Nombre');
-            $table->string('CorreoElectronico')->unique();
-            $table->string('Telefono');
-            $table->text('Direccion');
+            $table->id('idCliente');
+            $table->string('nombre');
+            $table->string('correoElectronico')->unique();
+            $table->string('password');
+            $table->string('telefono');
+            $table->text('direccion');
             $table->timestamps();
         });
     }

@@ -3,7 +3,6 @@
         class="container pt-5 d-flex justify-content-center h-100 align-items-center"
     >
         <form @submit.prevent="register">
-            <!-- Name input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="registerName">Nombre</label>
                 <input
@@ -15,7 +14,6 @@
                 />
             </div>
 
-            <!-- Email input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="registerEmail"
                     >Correo Electrónico</label
@@ -29,7 +27,6 @@
                 />
             </div>
 
-            <!-- Password input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="registerPassword"
                     >Contraseña</label
@@ -43,7 +40,6 @@
                 />
             </div>
 
-            <!-- Confirm Password input -->
             <div class="form-outline mb-4">
                 <label class="form-label" for="registerPasswordConfirm"
                     >Confirmar Contraseña</label
@@ -57,9 +53,33 @@
                 />
             </div>
 
-            <!-- Submit button -->
+            <!-- Nuevo campo para teléfono -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="registerPhone">Teléfono</label>
+                <input
+                    type="text"
+                    id="registerPhone"
+                    class="form-control"
+                    v-model="phone"
+                    placeholder="Tu número de teléfono"
+                />
+            </div>
+
+            <!-- Nuevo campo para dirección -->
+            <div class="form-outline mb-4">
+                <label class="form-label" for="registerAddress"
+                    >Dirección</label
+                >
+                <textarea
+                    id="registerAddress"
+                    class="form-control"
+                    v-model="address"
+                    placeholder="Tu dirección completa"
+                ></textarea>
+            </div>
+
             <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-success btn-block mb-4">
+                <button type="submit" class="btn btn-primary btn-block mb-4">
                     Registrarse
                 </button>
             </div>
@@ -70,31 +90,27 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { useRouter } from "vue-router";
 
 const name = ref("");
 const email = ref("");
 const password = ref("");
 const password_confirmation = ref("");
-const router = useRouter();
+const phone = ref(""); // Nuevo campo para el teléfono
+const address = ref(""); // Nuevo campo para la dirección
 
 const register = async () => {
     try {
-        const response = await axios.post(
-            "http://localhost:8000/api/register",
-            {
-                name: name.value,
-                email: email.value,
-                password: password.value,
-                password_confirmation: password_confirmation.value,
-            }
-        );
+        await axios.post("/register", {
+            nombre: name.value,
+            correoElectronico: email.value,
+            password: password.value,
+            password_confirmation: password_confirmation.value,
+            telefono: phone.value, // Se envía el teléfono
+            direccion: address.value, // Se envía la dirección
+        });
 
-        // Guardar token en localStorage
-        localStorage.setItem("token", response.data.token);
-
-        // Redireccionar al dashboard o página protegida
-        router.push("/dashboard");
+        // Al usar sesiones no necesitas guardar token
+        window.location.href = "/home"; // o donde quieras redirigir después de registrarse
     } catch (error) {
         console.error(error);
         alert(

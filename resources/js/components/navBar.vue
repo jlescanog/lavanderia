@@ -4,7 +4,7 @@
         data-bs-theme="dark"
     >
         <div class="container-fluid">
-            <a class="navbar-brand" href="#"
+            <a class="navbar-brand" href="/home"
                 ><img
                     src="/resources/images/logo.png"
                     class="img-fluid"
@@ -25,40 +25,37 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page"
-                            ><router-link
-                                to="/dashboard"
-                                class="text-decoration-none link-light"
-                                >Home</router-link
-                            ></a
+                        <a
+                            href="/home"
+                            class="nav-link active text-decoration-none link-light"
+                            aria-current="page"
+                        >
+                            Home</a
                         >
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                            ><router-link
-                                to="/login"
-                                class="text-decoration-none link-light"
-                                >Login</router-link
-                            ></a
+                        <a
+                            href="/login"
+                            class="nav-link text-decoration-none link-light"
                         >
+                            Login
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                            ><router-link
-                                to="/register"
-                                class="text-decoration-none link-light"
-                                >Register</router-link
-                            ></a
+                        <a
+                            href="/register"
+                            class="nav-link text-decoration-none link-light"
                         >
+                            Register
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"
-                            ><router-link
-                                to="/managementOrders"
-                                class="text-decoration-none link-light"
-                                >Gestion de Ordenes</router-link
-                            ></a
+                        <a
+                            href="/managementOrders"
+                            class="nav-link text-decoration-none link-light"
                         >
+                            Gestion de Ordenes
+                        </a>
                     </li>
                     <li class="nav-item dropdown">
                         <a
@@ -72,13 +69,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="#"
-                                    ><router-link
-                                        to="/crudOrders"
-                                        class="text-decoration-none link-light"
-                                        >CRUD Ordenes</router-link
-                                    ></a
-                                >
+                                <a class="dropdown-item" href="/crudOrders">
+                                    CRUD Ordenes
+                                </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" href="#"
@@ -94,20 +87,60 @@
                         </ul>
                     </li>
                 </ul>
-                <!-- <form class="d-flex" role="search">
-                    <input
-                        class="form-control me-2"
-                        type="search"
-                        placeholder="Search"
-                        aria-label="Search"
-                    />
-                    <button class="btn btn-outline-success" type="submit">
-                        Search
-                    </button>
-                </form> -->
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle text-decoration-none link-light"
+                            href="#"
+                            role="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <i class="bi bi-person-circle"></i> {{ userName }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="#">Perfil</a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li>
+                                <a
+                                    class="dropdown-item"
+                                    href="#"
+                                    @click.prevent="logout"
+                                    >Cerrar sesión</a
+                                >
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
     </nav>
 </template>
 
-<script></script>
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+
+const userName = ref("Usuario");
+
+onMounted(async () => {
+    try {
+        // Realiza la solicitud a la API para obtener el cliente autenticado
+        let response = await axios.get("/api/user");
+        userName.value = response.data.nombre; // Asignamos el nombre del cliente
+    } catch (error) {
+        console.error("No se pudo cargar el cliente:", error);
+    }
+});
+
+const logout = async () => {
+    try {
+        await axios.post("/logout");
+        window.location.href = "/login";
+    } catch (error) {
+        console.error("Error cerrando sesión", error);
+    }
+};
+</script>

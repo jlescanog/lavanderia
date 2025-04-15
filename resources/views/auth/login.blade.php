@@ -1,8 +1,9 @@
-@extends('template.app')
+@extends('template.template')
 
 @section('tittle', 'Login')
 
 @section('content')
-    <main id='app'>
-    </main>
+    <div id='app' class="h-100">
+        <login-form />
+    </div>
 @endsection
