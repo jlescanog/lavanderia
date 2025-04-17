@@ -36,4 +36,14 @@ class Orden extends Model
     {
         return $this->belongsTo(Empleado::class, 'IdEmpleado');
     }
+
+    public function detalles()
+    {
+        return $this->hasMany(DetalleOrden::class, 'IdOrden', 'IdOrden');
+    }
+
+    public function pagos()
+    {
+        return $this->hasMany(Pago::class, 'IdOrden', 'IdOrden');
+    }
 }

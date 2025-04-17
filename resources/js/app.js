@@ -11,6 +11,7 @@ import loginForm from './components/login.vue'
 import registerForm from './components/register.vue';
 import formOrders from './components/formOrders.vue'
 import managementOrders from './components/managementOrders.vue';
+import ordenForm2 from './pages/ordenForm2.vue';
 
 // Crear app para navbar si existe el div
 const navbarElement = document.getElementById('navbar');
@@ -27,7 +28,8 @@ if (appElement) {
         .component('register-form', registerForm)
         .component('home', home)
         .component('form-orders', formOrders)
-        .component('management-orders', managementOrders);
+        .component('management-orders', managementOrders)
+        .component('orden-form', ordenForm2)
 
     app.mount('#app');
 }

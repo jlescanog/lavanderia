@@ -87,9 +87,6 @@ axios.defaults.withCredentials = true;
 
 const login = async () => {
     try {
-        console.log("Email:", email.value);
-        console.log("Password:", password.value);
-
         await axios.get("/sanctum/csrf-cookie");
 
         await axios.post("/login", {

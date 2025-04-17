@@ -10,6 +10,7 @@ return new class extends Migration {
         Schema::create('servicios', function (Blueprint $table) {
             $table->id('IdServicio');
             $table->string('Nombre');
+            $table->string('TipoServicio');
             $table->decimal('Precio', 10, 2);
             $table->timestamps();
         });

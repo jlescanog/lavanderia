@@ -37,8 +37,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        Log::info('Datos recibidos', $request->all());
-
         $credentials = $request->validate([
             'correoElectronico' => 'required|string|email',
             'password' => 'required|string',
@@ -53,6 +51,8 @@ class AuthController extends Controller
         if (!Hash::check($credentials['password'], $cliente->password)) {
             return response()->json(['message' => 'Contraseña incorrecta.'], 401);
         }
+
+        Auth::login($cliente);
 
         return response()->json([
             'Cliente' => $cliente,
