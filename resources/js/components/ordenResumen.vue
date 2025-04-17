@@ -3,7 +3,6 @@
         <div class="card shadow-sm p-4">
             <h3 class="mb-4">Datos del Cliente</h3>
 
-            <!-- Nombre del cliente -->
             <div class="mb-3">
                 <label for="clienteNombre" class="form-label"
                     >Nombre del Cliente</label
@@ -17,7 +16,6 @@
                 />
             </div>
 
-            <!-- Tipo de pago -->
             <div class="mb-4">
                 <label for="tipoPago" class="form-label">Tipo de Pago</label>
                 <select class="form-select" id="tipoPago" v-model="tipoPago">
@@ -32,7 +30,6 @@
                 </select>
             </div>
 
-            <!-- Precio total -->
             <div class="mb-4">
                 <label class="form-label">Precio Total</label>
                 <input
@@ -98,7 +95,6 @@ export default {
                 return;
             }
 
-            // Aquí envías la orden completa a tu backend o lo procesas
             const ordenFinal = {
                 cliente: this.clienteNombre,
                 pago: this.tipoPago,
@@ -107,7 +103,6 @@ export default {
             };
 
             console.log("Orden Confirmada:", ordenFinal);
-            // Puedes reemplazar esto por un emit o una petición axios
             this.$emit("orden-confirmada", ordenFinal);
         },
     },

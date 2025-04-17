@@ -21,6 +21,10 @@ Route::middleware(['auth'])->group(function () {
         return view('pages/managementOrders');
     });
 
+    Route::get('/prendaForm', function () {
+        return view('pages/prendaForm');
+    });
+
     Route::get('/api/user', function () {
         return response()->json(Auth::user());
     });
@@ -38,8 +42,3 @@ Route::post('/register', [AuthController::class, 'register'])->name('register');
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
-
-
-Route::get('/prendaForm', function () {
-    return view('pages/prendaForm');
-});

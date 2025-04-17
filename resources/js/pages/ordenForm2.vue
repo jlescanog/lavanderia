@@ -1,6 +1,5 @@
 <template>
     <div class="container mt-4">
-        <!-- Paso 1: Formulario y lista de prendas -->
         <div v-if="!pasoConfirmacion">
             <div class="row">
                 <div class="col-md-6">
@@ -17,7 +16,6 @@
             </div>
         </div>
 
-        <!-- Paso 2: Confirmación de la Orden -->
         <orden-resumen
             v-else
             :prendas="prendas"

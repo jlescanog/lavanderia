@@ -44,14 +44,6 @@ class AuthController extends Controller
 
         $cliente = Cliente::where('correoElectronico', $credentials['correoElectronico'])->first();
 
-        if (!$cliente) {
-            return response()->json(['message' => 'El usuario no existe.'], 404);
-        }
-
-        if (!Hash::check($credentials['password'], $cliente->password)) {
-            return response()->json(['message' => 'Contraseña incorrecta.'], 401);
-        }
-
         Auth::login($cliente);
 
         return response()->json([
