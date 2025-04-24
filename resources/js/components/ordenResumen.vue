@@ -4,16 +4,47 @@
             <h3 class="mb-4">Datos del Cliente</h3>
 
             <div class="mb-3">
-                <label for="clienteNombre" class="form-label"
-                    >Nombre del Cliente</label
+                <label for="clienteCorreo" class="form-label"
+                    >Buscar Cliente por Correo</label
                 >
                 <input
                     type="text"
                     class="form-control"
-                    id="clienteNombre"
-                    v-model="clienteNombre"
-                    placeholder="Ingrese el nombre del cliente"
+                    id="clienteCorreo"
+                    v-model="busquedaCorreo"
+                    @input="filtrarClientes"
+                    placeholder="Ingrese correo del cliente"
+                    list="clientesList"
                 />
+                <datalist id="clientesList">
+                    <option
+                        v-for="cliente in clientesFiltrados"
+                        :key="cliente.idCliente"
+                        :value="cliente.correoElectronico"
+                    >
+                        {{ cliente.nombre }}
+                    </option>
+                </datalist>
+
+                <div v-if="clienteSeleccionado">
+                    <p class="mt-2">
+                        Cliente seleccionado:
+                        <strong>{{ clienteSeleccionado.nombre }}</strong>
+                    </p>
+                </div>
+
+                <div class="form-check mt-2">
+                    <input
+                        class="form-check-input"
+                        type="checkbox"
+                        id="clienteAnonimo"
+                        v-model="usarClientePorDefecto"
+                        @change="asignarClientePorDefecto"
+                    />
+                    <label class="form-check-label" for="clienteAnonimo">
+                        Registrar orden sin cliente (cliente por defecto)
+                    </label>
+                </div>
             </div>
 
             <div class="mb-4">
@@ -49,8 +80,14 @@
                         :key="index"
                         class="list-group-item d-flex justify-content-between align-items-center"
                     >
-                        {{ prenda.tipo }} - {{ prenda.color }} x
-                        {{ prenda.cantidad }}
+                        <div v-if="prenda.cantidad">
+                            {{ prenda.tipo }} - {{ prenda.color }} X
+                            {{ prenda.cantidad }} unidad(es)
+                        </div>
+                        <div v-else-if="prenda.peso">
+                            {{ prenda.tipo }} - {{ prenda.color }} X
+                            {{ prenda.peso }} Kilo(s)
+                        </div>
                         <span class="badge bg-primary rounded-pill"
                             >{{ prenda.precio }} S/</span
                         >
@@ -67,6 +104,11 @@
 </template>
 
 <script>
+import { ref } from "vue";
+
+const carrito = ref([]);
+import { serviciosDB } from "../dataJs";
+
 export default {
     name: "OrdenResumen",
     props: {
@@ -84,26 +126,146 @@ export default {
             clienteNombre: "",
             tipoPago: "",
             precioTotal: this.precioTotalCalculado,
+
+            busquedaCorreo: "",
+            clientes: [],
+            clientesFiltrados: [],
+            clienteSeleccionado: null,
+            usarClientePorDefecto: false,
         };
     },
+    mounted() {
+        this.obtenerClientes();
+    },
     methods: {
+        async obtenerClientes() {
+            try {
+                const response = await fetch("/api/clientes", {
+                    method: "GET",
+                    headers: {
+                        Accept: "application/json",
+                    },
+                });
+                const data = await response.json();
+                this.clientes = data;
+                this.clientesFiltrados = data;
+            } catch (error) {
+                console.error("Error al cargar clientes", error);
+            }
+        },
+        filtrarClientes() {
+            const texto = this.busquedaCorreo.toLowerCase();
+            this.clientesFiltrados = this.clientes.filter((cliente) =>
+                cliente.correoElectronico.toLowerCase().includes(texto)
+            );
+
+            const match = this.clientes.find(
+                (cliente) => cliente.correoElectronico.toLowerCase() === texto
+            );
+            if (match) {
+                this.clienteSeleccionado = match;
+                this.usarClientePorDefecto = false;
+            }
+        },
+        asignarClientePorDefecto() {
+            if (this.usarClientePorDefecto) {
+                this.clienteSeleccionado = {
+                    idCliente: 0,
+                    nombre: "Cliente Genérico",
+                    correoElectronico: "generico@tienda.com",
+                };
+            } else {
+                this.clienteSeleccionado = null;
+            }
+        },
         confirmarOrden() {
-            if (!this.clienteNombre || !this.tipoPago) {
+            if (
+                !this.tipoPago ||
+                (!this.clienteSeleccionado && !this.usarClientePorDefecto)
+            ) {
                 alert(
-                    "Por favor complete todos los campos antes de confirmar."
+                    "Por favor complete los datos del cliente y el tipo de pago."
                 );
                 return;
             }
 
-            const ordenFinal = {
-                cliente: this.clienteNombre,
-                pago: this.tipoPago,
-                prendas: this.prendas,
-                total: this.precioTotal,
+            const cliente_id = this.clienteSeleccionado?.idCliente ?? 0;
+
+            carrito.value = this.prendas;
+
+            const detalleOrden = carrito.value.map((item) => {
+                const precioLavado = serviciosDB.find(
+                    (s) => s.id === item.idLavado
+                ).precio;
+                const precioPlanchado = serviciosDB.find(
+                    (s) => s.id === item.idPlanchado
+                ).precio;
+                const precioUnitario = precioLavado + precioPlanchado;
+
+                const subtotal =
+                    precioUnitario *
+                    (item.cantidad > 0 ? item.cantidad : item.peso);
+
+                return {
+                    prenda_id: item.idPrenda,
+                    servicio_lavado_id: item.idLavado,
+                    servicio_planchado_id: item.idPlanchado,
+                    cantidad: item.cantidad,
+                    peso: item.peso,
+                    precio_unitario: precioUnitario,
+                    subtotal: subtotal,
+                };
+            });
+
+            const totalOrden = detalleOrden.reduce(
+                (acum, item) => acum + item.subtotal,
+                0
+            );
+
+            const jsonOrden = {
+                orden: {
+                    cliente_id: cliente_id,
+                    tipo_documento_id: "1",
+                    total: totalOrden,
+                    detalle_orden: detalleOrden,
+                    pago: {
+                        metodo_pago: this.tipoPago,
+                        monto_pagado: totalOrden,
+                        estado: "pendiente",
+                        num_documento: "12345678",
+                    },
+                },
             };
 
-            console.log("Orden Confirmada:", ordenFinal);
-            this.$emit("orden-confirmada", ordenFinal);
+            console.log(JSON.stringify(jsonOrden, null, 2));
+
+            fetch("/api/ordenes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Accept: "application/json",
+                    "X-CSRF-TOKEN": document
+                        .querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute("content"),
+                },
+
+                credentials: "include",
+                body: JSON.stringify(jsonOrden),
+            })
+                .then(async (response) => {
+                    const text = await response.text();
+                    console.log("Respuesta cruda:", text);
+
+                    window.location.href = "/ordenes/crear";
+                })
+                .catch(async (error) => {
+                    const raw = await error?.response?.text?.();
+                    console.error(
+                        "Error al registrar la orden:",
+                        error.message
+                    );
+                    console.log("Respuesta cruda:", raw);
+                });
         },
     },
 };

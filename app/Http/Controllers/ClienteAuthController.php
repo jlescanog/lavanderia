@@ -6,11 +6,8 @@ use App\Models\Cliente;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Log;
 
-
-class AuthController extends Controller
+class ClienteAuthController extends Controller
 {
     public function register(Request $request)
     {
@@ -30,31 +27,38 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Auth::login($cliente);
+        Auth::guard('clientes')->login($cliente);
 
         return response()->json(['message' => 'Cliente registrado exitosamente!'], 201);
     }
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'correoElectronico' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        $credentials = $request->only('correoElectronico', 'password');
 
-        $cliente = Cliente::where('correoElectronico', $credentials['correoElectronico'])->first();
+        if (Auth::guard('clientes')->attempt([
+            'correoElectronico' => $credentials['correoElectronico'],
+            'password' => $credentials['password']
+        ])) {
 
-        Auth::login($cliente);
+            $request->session()->regenerate();
+
+            return response()->json(['message' => 'Login correcto'], 200);
+        }
 
         return response()->json([
-            'Cliente' => $cliente,
-        ]);
+            'error' => 'Las credenciales son incorrectas o el usuario no existe.'
+        ], 401);
     }
 
 
     public function logout(Request $request)
     {
-        Auth::logout();
-        return response()->json(['message' => 'Desconectado con éxito']);
+        Auth::guard('clientes')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login');
     }
 }

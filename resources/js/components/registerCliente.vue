@@ -110,7 +110,7 @@ const register = async () => {
         });
 
         // Al usar sesiones no necesitas guardar token
-        window.location.href = "/home"; // o donde quieras redirigir después de registrarse
+        window.location.href = "/cliente/ordenes"; // o donde quieras redirigir después de registrarse
     } catch (error) {
         console.error(error);
         alert(

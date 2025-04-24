@@ -26,7 +26,7 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a
-                            href="/home"
+                            href="/cliente/ordenes"
                             class="nav-link active text-decoration-none link-light"
                             aria-current="page"
                         >
@@ -35,56 +35,11 @@
                     </li>
                     <li class="nav-item">
                         <a
-                            href="/login"
-                            class="nav-link text-decoration-none link-light"
-                        >
-                            Login
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
                             href="/register"
                             class="nav-link text-decoration-none link-light"
                         >
                             Register
                         </a>
-                    </li>
-                    <li class="nav-item">
-                        <a
-                            href="/managementOrders"
-                            class="nav-link text-decoration-none link-light"
-                        >
-                            Gestion de Ordenes
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a
-                            class="nav-link dropdown-toggle"
-                            href="#"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                        >
-                            Admin Panel
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li>
-                                <a class="dropdown-item" href="/crudOrders">
-                                    CRUD Ordenes
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"
-                                    >Another action</a
-                                >
-                            </li>
-                            <li><hr class="dropdown-divider" /></li>
-                            <li>
-                                <a class="dropdown-item" href="#"
-                                    >Something else here</a
-                                >
-                            </li>
-                        </ul>
                     </li>
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
@@ -99,10 +54,10 @@
                             <i class="bi bi-person-circle"></i> {{ userName }}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li>
+                            <!-- <li>
                                 <a class="dropdown-item" href="#">Perfil</a>
                             </li>
-                            <li><hr class="dropdown-divider" /></li>
+                            <li><hr class="dropdown-divider" /></li> -->
                             <li>
                                 <a
                                     class="dropdown-item"
@@ -129,7 +84,7 @@ onMounted(async () => {
     try {
         // Realiza la solicitud a la API para obtener el cliente autenticado
         let response = await axios.get("/api/user");
-        userName.value = response.data.nombre; // Asignamos el nombre del cliente
+        userName.value = response.data.Nombre; // Asignamos el nombre del cliente
     } catch (error) {
         console.error("No se pudo cargar el cliente:", error);
     }
@@ -137,7 +92,7 @@ onMounted(async () => {
 
 const logout = async () => {
     try {
-        await axios.post("/logout");
+        await axios.post("/cliente/logout");
         window.location.href = "/login";
     } catch (error) {
         console.error("Error cerrando sesión", error);

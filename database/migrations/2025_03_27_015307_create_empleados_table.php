@@ -10,8 +10,10 @@ return new class extends Migration {
         Schema::create('empleados', function (Blueprint $table) {
             $table->id('IdEmpleado');
             $table->string('Nombre');
+            $table->string('CorreoElectronico')->unique();
+            $table->string('password');
             $table->text('Direccion');
-            $table->string('Cargo');
+            $table->enum('Cargo', ['administrador', 'empleado']);
             $table->string('Telefono');
             $table->timestamps();
         });

@@ -8,10 +8,14 @@ import { createApp } from 'vue'
 import home from './components/home.vue';
 import navBar from './components/navBar.vue'
 import loginForm from './components/login.vue'
-import registerForm from './components/register.vue';
-import formOrders from './components/formOrders.vue'
-import managementOrders from './components/managementOrders.vue';
-import ordenForm2 from './pages/ordenForm2.vue';
+import registerForm from './components/registerCliente.vue';
+import registerEmpleado from './components/registerEmpleado.vue';
+import ordenform from './pages/ordenform.vue';
+import ordenesPage from './pages/ordenesPage.vue';
+import dashboard from './Pages/dashboard.vue';
+import clienteOrdenes from './components/clienteOrdenes.vue';
+import adminClientes from './pages/adminClientes.vue';
+
 
 // Crear app para navbar si existe el div
 const navbarElement = document.getElementById('navbar');
@@ -26,10 +30,14 @@ if (appElement) {
 
     app.component('login-form', loginForm)
         .component('register-form', registerForm)
+        .component('register-empleado', registerEmpleado)
         .component('home', home)
-        .component('form-orders', formOrders)
-        .component('management-orders', managementOrders)
-        .component('orden-form', ordenForm2)
+        .component('orden-form', ordenform)
+        .component('ordenes-page', ordenesPage)
+        .component('dashboard', dashboard)
+        .component('cliente_ordenes', clienteOrdenes)
+        .component('admin-clientes', adminClientes)
+        
 
     app.mount('#app');
 }

@@ -1,9 +1,9 @@
 @extends('template.template')
 
-@section('tittle', 'Ordenes')
+@section('tittle', 'Administrador')
 
 @section('content')
     <main id='app'>
-        <orden-form />
+        <admin-clientes></admin-clientes>
     </main>
 @endsection

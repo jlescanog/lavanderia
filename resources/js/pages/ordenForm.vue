@@ -1,32 +1,35 @@
 <template>
-    <div class="container mt-4">
-        <div v-if="!pasoConfirmacion">
-            <div class="row">
-                <div class="col-md-6">
-                    <PrendaForm @prenda-agregada="agregarPrenda" />
-                </div>
-                <div class="col-md-6">
-                    <ListaPrendas
-                        :prendas="prendas"
-                        @eliminar="eliminarPrenda"
-                        @editar="editarPrenda"
-                        @confirmar-prendas="pasarAConfirmacion"
-                    />
+    <AdminLayout>
+        <div class="container mt-4">
+            <div v-if="!pasoConfirmacion">
+                <div class="row">
+                    <div class="col-md-6">
+                        <PrendaForm @prenda-agregada="agregarPrenda" />
+                    </div>
+                    <div class="col-md-6">
+                        <ListaPrendas
+                            :prendas="prendas"
+                            @eliminar="eliminarPrenda"
+                            @editar="editarPrenda"
+                            @confirmar-prendas="pasarAConfirmacion"
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <orden-resumen
-            v-else
-            :prendas="prendas"
-            :precioTotalCalculado="calcularPrecioTotal()"
-            @orden-confirmada="guardarOrden"
-        />
-    </div>
+            <orden-resumen
+                v-else
+                :prendas="prendas"
+                :precioTotalCalculado="calcularPrecioTotal()"
+                @orden-confirmada="guardarOrden"
+            />
+        </div>
+    </AdminLayout>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import AdminLayout from "../components/AdminLayout.vue";
 import PrendaForm from "../components/prendaForm.vue";
 import ListaPrendas from "../components/listaPrendas.vue";
 import OrdenResumen from "../components/ordenResumen.vue";

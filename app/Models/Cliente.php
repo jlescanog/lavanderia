@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
 class Cliente extends Authenticatable
@@ -12,6 +11,8 @@ class Cliente extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'clientes';
+
+    protected $primaryKey = 'idCliente';
 
     protected $fillable = [
         'nombre',
@@ -30,13 +31,13 @@ class Cliente extends Authenticatable
         'updated_at' => 'datetime',
     ];
 
-    public function setPasswordAttribute($value)
-    {
-        $this->attributes['password'] = bcrypt($value);
-    }
-
     public function getAuthIdentifierName()
     {
         return 'correoElectronico';
+    }
+
+    public function ordenes()
+    {
+        return $this->hasMany(\App\Models\Orden::class, 'IdCliente');
     }
 }

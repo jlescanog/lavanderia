@@ -11,10 +11,12 @@ class DetalleOrden extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'Cantidad',
         'IdOrden',
         'IdPrenda',
-        'IdServicio'
+        'IdServicioLavado',
+        'IdServicioPlanchado',
+        'Cantidad',
+        'Peso'
     ];
 
     public function orden()
@@ -29,6 +31,17 @@ class DetalleOrden extends Model
 
     public function servicio()
     {
-        return $this->belongsTo(Servicio::class, 'IdServicio', 'IdServicio');
+        return $this->belongsTo(Servicio::class, 'IdServicio');
+    }
+
+
+    public function servicioLavado()
+    {
+        return $this->belongsTo(Servicio::class, 'IdServicioLavado');
+    }
+
+    public function servicioPlanchado()
+    {
+        return $this->belongsTo(Servicio::class, 'IdServicioPlanchado');
     }
 }

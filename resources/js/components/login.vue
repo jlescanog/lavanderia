@@ -4,7 +4,35 @@
     >
         <form @submit.prevent="login">
             <!-- Email input -->
-            <div data-mdb-input-init class="form-outline mb-4">
+            <div class="form-outline mb-4">
+                <label class="form-label d-block">Es usted:</label>
+                <div class="form-check form-check-inline">
+                    <input
+                        class="form-check-input"
+                        type="radio"
+                        id="cliente"
+                        value="cliente"
+                        v-model="tipoUsuario"
+                    />
+                    <label class="form-check-label" for="cliente"
+                        >Cliente</label
+                    >
+                </div>
+                <div class="form-check form-check-inline">
+                    <input
+                        class="form-check-input"
+                        type="radio"
+                        id="empleado"
+                        value="empleado"
+                        v-model="tipoUsuario"
+                    />
+                    <label class="form-check-label" for="empleado"
+                        >Empleado</label
+                    >
+                </div>
+            </div>
+
+            <div class="form-outline mb-4">
                 <label class="form-label" for="emailInput"
                     >Correo Electrónico</label
                 >
@@ -18,7 +46,7 @@
             </div>
 
             <!-- Password input -->
-            <div data-mdb-input-init class="form-outline mb-4">
+            <div class="form-outline mb-4">
                 <label class="form-label" for="passwordInput">Contraseña</label>
                 <input
                     v-model="password"
@@ -29,17 +57,15 @@
                 />
             </div>
 
-            <!-- 2 column grid layout for inline styling -->
+            <!-- Recordarme y olvidar contraseña -->
             <div class="row mb-4 text-center">
                 <div
                     class="col d-flex justify-content-center align-items-center"
                 >
-                    <!-- Checkbox -->
                     <div class="form-check">
                         <input
                             class="form-check-input"
                             type="checkbox"
-                            value=""
                             id="checkboxLogin"
                             checked
                         />
@@ -48,21 +74,14 @@
                         </label>
                     </div>
                 </div>
-
                 <div class="col">
-                    <!-- Simple link -->
                     <a href="#!">¿Has olvidado la contraseña?</a>
                 </div>
             </div>
 
             <!-- Submit button -->
             <div class="d-flex justify-content-center">
-                <button
-                    type="submit"
-                    data-mdb-button-init
-                    data-mdb-ripple-init
-                    class="btn btn-primary btn-block mb-4"
-                >
+                <button type="submit" class="btn btn-primary btn-block mb-4">
                     Iniciar Sesión
                 </button>
             </div>
@@ -82,20 +101,41 @@ import axios from "axios";
 
 const email = ref("");
 const password = ref("");
+const tipoUsuario = ref(""); // cliente o empleado
 
 axios.defaults.withCredentials = true;
 
 const login = async () => {
+    if (!tipoUsuario.value) {
+        alert("Por favor, selecciona si eres cliente o empleado.");
+        return;
+    }
+
     try {
         await axios.get("/sanctum/csrf-cookie");
 
-        await axios.post("/login", {
-            correoElectronico: email.value,
-            password: password.value,
-        });
+        let url = "/login";
+        if (tipoUsuario.value === "empleado") {
+            url = "/empleado/login";
+        } else if (tipoUsuario.value === "cliente") {
+            url = "/cliente/login";
+        }
 
-        // Redireccionar al home o página protegida
-        window.location.href = "/home";
+        await axios.post(
+            url,
+            {
+                correoElectronico: email.value,
+                password: password.value,
+            },
+            { withCredentials: true }
+        );
+
+        // Redirige según tipo de usuario
+        if (tipoUsuario.value === "empleado") {
+            window.location.href = "/admin/dashboard";
+        } else {
+            window.location.href = "/cliente/ordenes";
+        }
     } catch (error) {
         console.error(error);
         alert(

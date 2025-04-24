@@ -3,20 +3,16 @@
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\OrdenController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\VerificationController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ClienteOrdenController;
 
-Route::middleware('auth:sanctum')->get('/user', function () {
-    return Auth::user();  // Devuelve el usuario autenticado
-});
+Route::apiResource('clientes', ClienteController::class);
+Route::apiResource('ordenes', OrdenController::class);
 
-Route::middleware('auth')->post('/logout', [AuthController::class, 'logout']);
+Route::get('/ordenes/pendientes', [OrdenController::class, 'obtenerPendientes']);
 
-Route::middleware('auth')->group(function () {
-    Route::apiResource('clientes', ClienteController::class);
+Route::put('/ordenes/{id}/estado', [OrdenController::class, 'actualizarEstado']);
 
-    Route::apiResource('ordenes', OrdenController::class);
-});
+Route::delete('/ordenes/{id}', [OrdenController::class, 'destroy']);
 
-Route::post('/verify-email-code', [VerificationController::class, 'verify']);
+Route::middleware(['web', 'auth:clientes'])->get('/cliente/ordenes', [ClienteOrdenController::class, 'index']);

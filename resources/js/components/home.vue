@@ -27,7 +27,7 @@
                 </button>
             </a>
             <a
-                href="/formOrders"
+                href="/prendaForm"
                 class="text-decoration-none card-link col-2 d-flex text-center align-items-center justify-content-space-around mt-3 border border-0"
                 style="width: 18rem"
             >
@@ -52,7 +52,7 @@
                 </button>
             </a>
             <a
-                href="/managementOrders"
+                href="/ordenesPage"
                 class="text-decoration-none card-link d-flex col-2 text-center align-items-center justify-content-space-around mt-3"
                 style="width: 18rem"
             >

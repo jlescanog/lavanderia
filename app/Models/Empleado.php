@@ -2,15 +2,37 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Empleado extends Model
+class Empleado extends Authenticatable
 {
     use HasFactory;
 
     protected $table = 'empleados';
+
     protected $primaryKey = 'IdEmpleado';
-    protected $fillable = ['Nombre', 'CorreoElectronico', 'Telefono', 'Cargo'];
-    public $timestamps = true;
+
+    protected $fillable = [
+        'Nombre',
+        'CorreoElectronico',
+        'Telefono',
+        'Cargo',
+        'Direccion',
+        'password'
+    ];
+
+    protected $hidden = [
+        'password',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    public function getAuthIdentifierName()
+    {
+        return 'CorreoElectronico';
+    }
 }

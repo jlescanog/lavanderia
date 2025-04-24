@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h5 class="mb-3">Lista de Prendas</h5>
+        <h5 class="mb-3 mt-4">Lista de Prendas</h5>
         <div v-if="prendas.length">
             <ul class="list-group">
                 <li
@@ -8,8 +8,18 @@
                     :key="index"
                     class="list-group-item d-flex justify-content-between align-items-center"
                 >
-                    {{ item.tipo }} - {{ item.color }} -
-                    {{ item.cantidad }} unidad(es)
+                    <div class="d-flex">
+                        <div class="pe-1">{{ item.tipo }} -</div>
+                        <div class="pe-1" v-if="item.tipo == 'Ropa'">
+                            {{ item.color }} -
+                        </div>
+                        <div class="pe-1" v-if="item.cantidad">
+                            {{ item.cantidad }} unidad(es)
+                        </div>
+                        <div class="pe-1" v-else-if="item.peso">
+                            {{ item.peso }} Kilo(s)
+                        </div>
+                    </div>
                     <div>
                         <button
                             @click="$emit('editar', index, item)"

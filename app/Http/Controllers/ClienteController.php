@@ -13,6 +13,7 @@ class ClienteController extends Controller
         return Cliente::all();
     }
 
+
     // Guardar un nuevo cliente
     public function store(Request $request)
     {
