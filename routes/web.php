@@ -22,10 +22,6 @@ Route::get('/register', function () {
     return view('auth/register');
 });
 
-Route::get('/empleado/register', function () {
-    return view('auth/registerEmpleado');
-});
-
 Route::middleware(['web'])->group(function () {
     Route::post('/empleado/login', [EmpleadoAuthController::class, 'login']);
     Route::post('/cliente/login', [ClienteAuthController::class, 'login']);
@@ -62,6 +58,10 @@ Route::middleware(['auth:empleados'])->group(function () {
 
     Route::get('/api/user', function () {
         return response()->json(Auth::guard('empleados')->user());
+    });
+
+    Route::get('/empleado/register', function () {
+        return view('auth/registerEmpleado');
     });
 });
 
