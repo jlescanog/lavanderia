@@ -255,16 +255,19 @@ const enviarPrenda = () => {
     // El planchado puede ser opcional para Edredón y Sábana
     if (categoriaSeleccionada.value !== 'Ropa' && omitirPlanchado.value) {
         // Si se marcó la opción de omitir planchado
-        prenda.value.idPlanchado = 4; // ID del servicio "Sin planchado"
+        prenda.value.idPlanchado = 7; // ID del servicio "Sin planchado" que acabamos de añadir
         prenda.value.planchado = "Sin planchado";
+        console.log("Usando servicio 'Sin planchado' con ID 7");
     } else if (servicioPlanchadoSeleccionado.value) {
         // Si se seleccionó un servicio de planchado
         prenda.value.idPlanchado = servicioPlanchadoSeleccionado.value.id;
         prenda.value.planchado = servicioPlanchadoSeleccionado.value.nombre;
+        console.log(`Usando servicio de planchado seleccionado: ${prenda.value.planchado} con ID ${prenda.value.idPlanchado}`);
     } else if (categoriaSeleccionada.value !== 'Ropa') {
-        // Si no se seleccionó planchado para Edredón/Sábana, usar un valor por defecto
-        prenda.value.idPlanchado = 4; // ID del servicio "Sin planchado"
+        // Si no se seleccionó planchado para Edredón/Sábana, usar el servicio "Sin planchado"
+        prenda.value.idPlanchado = 7; // ID del servicio "Sin planchado" que acabamos de añadir
         prenda.value.planchado = "Sin planchado";
+        console.log("Usando servicio 'Sin planchado' con ID 7 (por defecto)");
     }
     
     // Calcular precio basado en los servicios seleccionados

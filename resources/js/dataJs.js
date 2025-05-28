@@ -23,4 +23,5 @@ export const serviciosDB = [
     { id: 4, nombre: "Planchado Simple", tipo: "planchado", precio: 3.0 },
     { id: 5, nombre: "Planchado Especial", tipo: "planchado", precio: 4.0 },
     { id: 6, nombre: "Planchado Premium", tipo: "planchado", precio: 5.0 },
+    { id: 7, nombre: "Sin planchado", tipo: "planchado", precio: 0.0 },
 ];

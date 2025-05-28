@@ -32,5 +32,8 @@ class DatabaseSeeder extends Seeder
         
         // Agrega tipos de prendas Edredón y Sábana
         $this->call(PrendaEdredonSabanaSeeder::class);
+        
+        // Agrega el servicio "Sin planchado"
+        $this->call(SinPlanchadoSeeder::class);
     }
 }
