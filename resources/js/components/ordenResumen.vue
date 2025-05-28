@@ -248,23 +248,55 @@ export default {
                         .querySelector('meta[name="csrf-token"]')
                         ?.getAttribute("content"),
                 },
-
                 credentials: "include",
                 body: JSON.stringify(jsonOrden),
             })
                 .then(async (response) => {
-                    const text = await response.text();
-                    console.log("Respuesta cruda:", text);
-
+                    // Primero verificamos si la respuesta es exitosa (código 2xx)
+                    if (!response.ok) {
+                        // Si no es exitosa, leemos el texto y lo convertimos a JSON
+                        const errorText = await response.text();
+                        console.log('Texto de error completo:', errorText);
+                        
+                        try {
+                            const errorJson = JSON.parse(errorText);
+                            console.log('JSON de error:', errorJson);
+                            
+                            // Si es un error de validación (422), mostrar detalles
+                            if (response.status === 422 && errorJson.errors) {
+                                let errorMessages = [];
+                                
+                                // Recorrer todos los errores de validación
+                                for (const field in errorJson.errors) {
+                                    errorMessages.push(`${field}: ${errorJson.errors[field].join(', ')}`);
+                                }
+                                
+                                throw new Error('Errores de validación:\n' + errorMessages.join('\n'));
+                            } else {
+                                throw new Error(errorJson.error || errorJson.message || 'Error al procesar la orden');
+                            }
+                        } catch (e) {
+                            if (e.message.includes('Errores de validación')) {
+                                throw e; // Rethrow el error de validación formateado
+                            }
+                            console.error('Error al parsear respuesta:', e);
+                            throw new Error('Error al procesar la orden: ' + response.status);
+                        }
+                    }
+                    
+                    // Si llegamos aquí, la respuesta es exitosa
+                    const responseData = await response.json();
+                    console.log("Orden creada exitosamente:", responseData);
+                    
+                    // Mostrar mensaje de éxito
+                    alert("¡Orden registrada correctamente!");
+                    
+                    // Redireccionar
                     window.location.href = "/ordenes/crear";
                 })
-                .catch(async (error) => {
-                    const raw = await error?.response?.text?.();
-                    console.error(
-                        "Error al registrar la orden:",
-                        error.message
-                    );
-                    console.log("Respuesta cruda:", raw);
+                .catch((error) => {
+                    console.error("Error al registrar la orden:", error.message);
+                    alert("Error al registrar la orden: " + error.message);
                 });
         },
     },

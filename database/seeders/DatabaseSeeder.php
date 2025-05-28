@@ -19,5 +19,15 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // Agrega un empleado de prueba
+        $this->call(EmpleadoSeeder::class);
+        
+        // Agrega tipos de documentos
+        $this->call(TipoDocumentoSeeder::class);
+        
+        // Agrega prendas y servicios necesarios
+        $this->call(PrendaSeeder::class);
+        $this->call(ServicioSeeder::class);
     }
 }

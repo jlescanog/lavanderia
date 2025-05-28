@@ -1,7 +1,10 @@
 <template>
-    <AdminLayout
-        ><div class="container mt-3">
+    <AdminLayout>
+        <div class="container mt-3">
             <h1 class="mb-4">Órdenes de Lavandería</h1>
+            
+            <!-- Componente de exportación -->
+            <ExportarOrdenes />
 
             <OrdenesSection
                 titulo="Órdenes Pendientes"
@@ -25,8 +28,9 @@
                 titulo="Órdenes Listas"
                 :ordenes="ordenesListas"
                 @refrescar="cargarOrdenes"
-            /></div
-    ></AdminLayout>
+            />
+        </div>
+    </AdminLayout>
 </template>
 
 <script setup>
@@ -35,6 +39,7 @@ import axios from "axios";
 
 import AdminLayout from "../components/AdminLayout.vue";
 import OrdenesSection from "../components/OrdenesSection.vue";
+import ExportarOrdenes from "../components/ExportarOrdenes.vue";
 
 const todasOrdenes = ref([]);
 const ordenesPendientes = computed(() =>
