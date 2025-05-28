@@ -46,4 +46,9 @@ class Orden extends Model
     {
         return $this->hasMany(Pago::class, 'IdOrden', 'IdOrden');
     }
+    
+    public function pago()
+    {
+        return $this->hasOne(Pago::class, 'IdOrden', 'IdOrden');
+    }
 }

@@ -9,6 +9,8 @@ TACSAY es una aplicación web para la gestión de órdenes de lavandería desarr
 - **Exportación de Datos**: Exportación de órdenes a formatos CSV y PDF con filtros por estado y rango de fechas
 - **Validación de Datos**: Sistema robusto de validación de datos de clientes y contraseñas
 - **Integración con RENIEC**: Consulta de datos de clientes por DNI a través de la API de RENIEC
+- **Perfil de Cliente**: Gestión de perfil de usuario con estadísticas de órdenes y actualización de datos personales
+- **Pasarela de Pago**: Integración con Culqi para procesar pagos con tarjeta de crédito/débito
 
 ## Requisitos Previos
 
@@ -16,6 +18,28 @@ TACSAY es una aplicación web para la gestión de órdenes de lavandería desarr
 - Composer
 - Node.js y NPM
 - SQLite (configurado en el archivo .env)
+
+## Nuevas Funcionalidades
+
+### Perfil de Cliente
+
+La aplicación ahora cuenta con un sistema completo de gestión de perfil para los clientes, que incluye:
+
+- **Visualización de datos personales**: Nombre, correo, teléfono, dirección
+- **Actualización de información**: Posibilidad de editar datos personales
+- **Cambio de contraseña**: Sistema seguro para actualizar credenciales
+- **Estadísticas de órdenes**: Resumen de órdenes totales, pendientes, en proceso y finalizadas
+
+### Pasarela de Pago con Culqi
+
+Se ha implementado una integración completa con Culqi para procesar pagos con tarjeta:
+
+- **Selección de método de pago**: Al crear una orden, se puede elegir "Tarjeta" como método
+- **Procesamiento seguro**: Los datos de tarjeta se procesan directamente en Culqi
+- **Confirmación de pago**: Notificaciones de éxito o error al procesar el pago
+- **Actualización automática**: El estado del pago se actualiza en el sistema
+
+Para utilizar esta funcionalidad, es necesario configurar las llaves de API de Culqi en el archivo `.env`.
 
 ## Instalación
 
@@ -34,7 +58,7 @@ cd lavanderia
 cp .env.example .env
 ```
 
-Edita el archivo `.env` para configurar la conexión a la base de datos SQLite:
+Edita el archivo `.env` para configurar la conexión a la base de datos SQLite y las claves de API:
 
 ```
 DB_CONNECTION=sqlite
@@ -44,6 +68,13 @@ DB_CONNECTION=sqlite
 # DB_DATABASE=laravel
 # DB_USERNAME=root
 # DB_PASSWORD=
+
+# Configuración de RENIEC API (opcional)
+RENIEC_API_TOKEN=tu_token_de_reniec
+
+# Configuración de Culqi (para procesar pagos)
+CULQI_PUBLIC_KEY=pk_test_tu_llave_publica
+CULQI_PRIVATE_KEY=sk_test_tu_llave_privada
 ```
 
 Asegúrate de crear el archivo de base de datos SQLite:

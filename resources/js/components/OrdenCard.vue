@@ -67,8 +67,12 @@ export default {
         },
     },
     computed: {
-        // Determinar si se debe mostrar el botón de pago con Stripe
+        // Determinar si se debe mostrar el botón de pago con Culqi
         mostrarBotonPago() {
+            // Mostrar el botón si:
+            // 1. El método de pago es Tarjeta
+            // 2. El estado de pago es pendiente o no está definido
+            // 3. La orden no está finalizada
             return this.orden.metodo_pago === 'Tarjeta' && 
                    (this.orden.estado_pago === 'pendiente' || !this.orden.estado_pago) &&
                    this.orden.estado !== 'finalizado';
