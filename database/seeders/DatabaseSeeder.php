@@ -29,5 +29,8 @@ class DatabaseSeeder extends Seeder
         // Agrega prendas y servicios necesarios
         $this->call(PrendaSeeder::class);
         $this->call(ServicioSeeder::class);
+        
+        // Agrega tipos de prendas Edredón y Sábana
+        $this->call(PrendaEdredonSabanaSeeder::class);
     }
 }
