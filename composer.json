@@ -8,10 +8,12 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
+        "culqi/culqi-php": "^2.0",
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^1.1",
+        "stripe/stripe-php": "^17.2",
         "twbs/bootstrap-icons": "^1.11"
     },
     "require-dev": {

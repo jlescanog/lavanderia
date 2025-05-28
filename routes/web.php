@@ -78,4 +78,20 @@ Route::middleware(['auth:clientes'])->group(function () {
     Route::get('/cliente/api/user', function () {
         return response()->json(Auth::guard('clientes')->user());
     });
+    
+    // Rutas para el perfil del cliente
+    Route::post('/api/cliente/perfil/actualizar', [App\Http\Controllers\ClientePerfilController::class, 'actualizar']);
+    Route::get('/api/cliente/ordenes/estadisticas', [App\Http\Controllers\ClientePerfilController::class, 'estadisticas']);
+    
+    // Rutas para el pago con Culqi
+    Route::get('/cliente/pago/{orden_id}', function ($orden_id) {
+        return view('pages.pagoOrden', ['orden_id' => $orden_id]);
+    });
+    Route::get('/cliente/pago/exito', [App\Http\Controllers\CulqiController::class, 'exitoPago']);
+    Route::get('/cliente/pago/error', [App\Http\Controllers\CulqiController::class, 'errorPago']);
+    Route::post('/api/culqi/crear-cargo', [App\Http\Controllers\CulqiController::class, 'crearCargo']);
+    Route::get('/api/cliente/orden/{id}', function ($id) {
+        $orden = App\Models\Orden::with(['detalles.prenda', 'pago'])->findOrFail($id);
+        return response()->json($orden);
+    });
 });

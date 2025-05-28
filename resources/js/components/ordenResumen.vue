@@ -288,11 +288,22 @@ export default {
                     const responseData = await response.json();
                     console.log("Orden creada exitosamente:", responseData);
                     
-                    // Mostrar mensaje de éxito
-                    alert("¡Orden registrada correctamente!");
-                    
-                    // Redireccionar
-                    window.location.href = "/ordenes/crear";
+                    // Verificar si el método de pago es tarjeta
+                    if (this.tipoPago === 'Tarjeta') {
+                        // Si el cliente está autenticado, redirigir a la página de pago
+                        if (cliente_id > 0) {
+                            alert("¡Orden registrada correctamente! Serás redirigido a la página de pago.");
+                            window.location.href = `/cliente/pago/${responseData.orden_id}`;
+                        } else {
+                            // Si es un cliente anónimo, mostrar mensaje informativo
+                            alert("¡Orden registrada correctamente! El cliente deberá iniciar sesión para completar el pago con tarjeta.");
+                            window.location.href = "/ordenes/crear";
+                        }
+                    } else {
+                        // Para otros métodos de pago, mostrar mensaje de éxito y redirigir
+                        alert("¡Orden registrada correctamente!");
+                        window.location.href = "/ordenes/crear";
+                    }
                 })
                 .catch((error) => {
                     console.error("Error al registrar la orden:", error.message);

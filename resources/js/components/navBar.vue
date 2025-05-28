@@ -30,40 +30,51 @@
                             class="nav-link active text-decoration-none link-light"
                             aria-current="page"
                         >
-                            Home</a
+                            <i class="bi bi-house-fill me-1"></i> Inicio</a
                         >
                     </li>
                     <li class="nav-item">
                         <a
-                            href="/register"
+                            href="/cliente/historial"
                             class="nav-link text-decoration-none link-light"
                         >
-                            Register
+                            <i class="bi bi-clock-history me-1"></i> Historial
                         </a>
                     </li>
                 </ul>
                 <ul class="navbar-nav mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
                         <a
-                            class="nav-link dropdown-toggle text-decoration-none link-light"
+                            class="nav-link dropdown-toggle text-decoration-none link-light d-flex align-items-center"
                             href="#"
                             role="button"
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <i class="bi bi-person-circle"></i> {{ userName }}
+                            <div class="user-avatar me-2 d-flex align-items-center justify-content-center bg-primary rounded-circle">
+                                <span v-if="userName && userName.length > 0">{{ userName.charAt(0) }}</span>
+                                <i v-else class="bi bi-person"></i>
+                            </div>
+                            <span class="user-name">{{ userName }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <!-- <li>
-                                <a class="dropdown-item" href="#">Perfil</a>
+                            <li>
+                                <a class="dropdown-item" href="/cliente/perfil">
+                                    <i class="bi bi-person-badge me-2"></i> Mi Perfil
+                                </a>
                             </li>
-                            <li><hr class="dropdown-divider" /></li> -->
+                            <li>
+                                <a class="dropdown-item" href="/cliente/ordenes">
+                                    <i class="bi bi-bag-check me-2"></i> Mis Órdenes
+                                </a>
+                            </li>
+                            <li><hr class="dropdown-divider" /></li>
                             <li>
                                 <a
-                                    class="dropdown-item"
+                                    class="dropdown-item text-danger"
                                     href="#"
                                     @click.prevent="logout"
-                                    >Cerrar sesión</a
+                                    ><i class="bi bi-box-arrow-right me-2"></i> Cerrar sesión</a
                                 >
                             </li>
                         </ul>
@@ -79,14 +90,18 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 
 const userName = ref("Usuario");
+const isLoading = ref(true);
 
 onMounted(async () => {
     try {
         // Realiza la solicitud a la API para obtener el cliente autenticado
         let response = await axios.get("/api/user");
-        userName.value = response.data.Nombre; // Asignamos el nombre del cliente
+        userName.value = response.data.Nombre || "Usuario"; // Asignamos el nombre del cliente
+        console.log("Usuario cargado:", userName.value);
     } catch (error) {
         console.error("No se pudo cargar el cliente:", error);
+    } finally {
+        isLoading.value = false;
     }
 });
 
@@ -99,3 +114,33 @@ const logout = async () => {
     }
 };
 </script>
+
+<style scoped>
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    font-weight: bold;
+    color: white;
+    text-transform: uppercase;
+}
+
+.user-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: #f8d7da;
+}
+</style>

@@ -14,7 +14,10 @@ import ordenform from './pages/ordenform.vue';
 import ordenesPage from './pages/ordenesPage.vue';
 import dashboard from './Pages/dashboard.vue';
 import clienteOrdenes from './components/clienteOrdenes.vue';
+import perfilCliente from './components/perfilCliente.vue';
 import adminClientes from './pages/adminClientes.vue';
+import CulqiPaymentForm from './components/CulqiPaymentForm.vue';
+import PagoOrden from './components/PagoOrden.vue';
 
 
 // Crear app para navbar si existe el div
@@ -36,7 +39,9 @@ if (appElement) {
         .component('ordenes-page', ordenesPage)
         .component('dashboard', dashboard)
         .component('cliente_ordenes', clienteOrdenes)
+        .component('perfil_cliente', perfilCliente)
         .component('admin-clientes', adminClientes)
+        .component('pago_orden', PagoOrden)
         
 
     app.mount('#app');
