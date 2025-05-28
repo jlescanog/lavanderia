@@ -10,7 +10,7 @@
             </select>
         </div>
 
-        <div class="mb-3" v-if="categoriaSeleccionada">
+        <div class="mb-3" v-if="categoriaSeleccionada === 'Ropa'">
             <label class="form-label">Tipo de Prenda</label>
             <select v-model="prendaSeleccionada" class="form-select" required>
                 <option disabled value="">Selecciona...</option>
@@ -20,7 +20,7 @@
             </select>
         </div>
 
-        <div class="mb-3" v-if="prendaSeleccionada">
+        <div class="mb-3" v-if="categoriaSeleccionada === 'Ropa' && prendaSeleccionada">
             <label class="form-label">Color</label>
             <select v-model="prenda.color" class="form-select" required>
                 <option disabled value="">Selecciona...</option>
@@ -103,13 +103,19 @@
         </div>
 
         <div class="mb-3">
-            <label class="form-label">Tipo de Planchado</label>
-            <select v-model="servicioPlanchadoSeleccionado" class="form-select" required>
+            <label class="form-label">Tipo de Planchado <span v-if="categoriaSeleccionada !== 'Ropa'">(Opcional)</span></label>
+            <select v-model="servicioPlanchadoSeleccionado" class="form-select" :required="categoriaSeleccionada === 'Ropa'">
                 <option disabled value="">Selecciona...</option>
                 <option v-for="servicio in serviciosPlanchado" :key="servicio.id" :value="servicio">
                     {{ servicio.nombre }} ({{ servicio.precio }} S/)
                 </option>
             </select>
+            <div v-if="categoriaSeleccionada !== 'Ropa'" class="form-check mt-2">
+                <input class="form-check-input" type="checkbox" id="sinPlanchado" v-model="omitirPlanchado">
+                <label class="form-check-label" for="sinPlanchado">
+                    No requiere planchado
+                </label>
+            </div>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">
@@ -130,6 +136,7 @@ const prendaSeleccionada = ref(null);
 const servicioLavadoSeleccionado = ref(null);
 const servicioPlanchadoSeleccionado = ref(null);
 const radioControl = ref("cantidad");
+const omitirPlanchado = ref(false);
 
 // Filtrar tipos de prenda según la categoría seleccionada
 const tiposPrendaFiltrados = computed(() => {
@@ -179,23 +186,70 @@ const emit = defineEmits(["prenda-agregada"]);
 
 // Enviar prenda al componente padre
 const enviarPrenda = () => {
-    if (!prendaSeleccionada.value || !servicioLavadoSeleccionado.value || 
-        !servicioPlanchadoSeleccionado.value || !prenda.value.color) {
-        alert("Por favor completa todos los campos del formulario");
+    // Validaciones según el tipo de categoría
+    if (categoriaSeleccionada.value === 'Ropa') {
+        // Para Ropa necesitamos tipo, color y servicios
+        if (!prendaSeleccionada.value || !servicioLavadoSeleccionado.value || 
+            !servicioPlanchadoSeleccionado.value || !prenda.value.color) {
+            alert("Por favor completa todos los campos del formulario");
+            return;
+        }
+    } else {
+        // Para Edredón y Sábana solo necesitamos la categoría y servicios
+        if (!categoriaSeleccionada.value || !servicioLavadoSeleccionado.value) {
+            alert("Por favor selecciona al menos la categoría y el tipo de lavado");
+            return;
+        }
+    }
+    
+    // Verificar que se haya ingresado cantidad o peso
+    if ((radioControl.value === "cantidad" && !prenda.value.cantidad) ||
+        (radioControl.value === "peso" && !prenda.value.peso)) {
+        alert("Por favor ingresa la cantidad o peso");
         return;
     }
     
-    // Asignar valores seleccionados
-    prenda.value.tipo = prendaSeleccionada.value.tipo;
-    prenda.value.idPrenda = prendaSeleccionada.value.id;
+    // Asignar valores seleccionados según la categoría
+    if (categoriaSeleccionada.value === 'Ropa') {
+        prenda.value.tipo = prendaSeleccionada.value.tipo;
+        prenda.value.idPrenda = prendaSeleccionada.value.id;
+    } else {
+        // Para Edredón y Sábana, usamos la categoría como tipo
+        prenda.value.tipo = categoriaSeleccionada.value;
+        // Buscar un ID apropiado o usar uno predeterminado
+        const prendaDefault = prendasDB.find(p => p.tipo.includes(categoriaSeleccionada.value)) || prendasDB[0];
+        prenda.value.idPrenda = prendaDefault.id;
+        prenda.value.color = "N/A"; // No aplica color para estas categorías
+    }
+    
+    // Asignar servicios
     prenda.value.idLavado = servicioLavadoSeleccionado.value.id;
-    prenda.value.idPlanchado = servicioPlanchadoSeleccionado.value.id;
     prenda.value.lavado = servicioLavadoSeleccionado.value.nombre;
-    prenda.value.planchado = servicioPlanchadoSeleccionado.value.nombre;
+    
+    // El planchado puede ser opcional para Edredón y Sábana
+    if (categoriaSeleccionada.value !== 'Ropa' && omitirPlanchado.value) {
+        // Si se marcó la opción de omitir planchado
+        prenda.value.idPlanchado = 4; // ID del servicio "Sin planchado"
+        prenda.value.planchado = "Sin planchado";
+    } else if (servicioPlanchadoSeleccionado.value) {
+        // Si se seleccionó un servicio de planchado
+        prenda.value.idPlanchado = servicioPlanchadoSeleccionado.value.id;
+        prenda.value.planchado = servicioPlanchadoSeleccionado.value.nombre;
+    } else if (categoriaSeleccionada.value !== 'Ropa') {
+        // Si no se seleccionó planchado para Edredón/Sábana, usar un valor por defecto
+        prenda.value.idPlanchado = 4; // ID del servicio "Sin planchado"
+        prenda.value.planchado = "Sin planchado";
+    }
     
     // Calcular precio basado en los servicios seleccionados
     const precioLavado = servicioLavadoSeleccionado.value.precio;
-    const precioPlanchado = servicioPlanchadoSeleccionado.value.precio;
+    let precioPlanchado = 0;
+    
+    // Si no se omite el planchado y hay un servicio seleccionado, usar su precio
+    if (!omitirPlanchado.value && servicioPlanchadoSeleccionado.value) {
+        precioPlanchado = servicioPlanchadoSeleccionado.value.precio;
+    }
+    
     const precioUnitario = precioLavado + precioPlanchado;
     
     // Calcular precio total según cantidad o peso
@@ -213,6 +267,7 @@ const enviarPrenda = () => {
     prendaSeleccionada.value = null;
     servicioLavadoSeleccionado.value = null;
     servicioPlanchadoSeleccionado.value = null;
+    omitirPlanchado.value = false;
     
     prenda.value = {
         tipo: "",
