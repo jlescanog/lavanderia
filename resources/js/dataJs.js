@@ -10,6 +10,9 @@ export const prendasDB = [
     { id: 8, tipo: "Vestido", color: "Azul" },
     { id: 9, tipo: "Saco", color: "Gris" },
     { id: 10, tipo: "Falda", color: "Rojo" },
+    // Añadir tipos específicos para Edredón y Sábana
+    { id: 11, tipo: "Edredón", color: "N/A" },
+    { id: 12, tipo: "Sábana", color: "N/A" },
 ];
 
 // Datos de servicios según la base de datos

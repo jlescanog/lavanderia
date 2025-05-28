@@ -216,9 +216,35 @@ const enviarPrenda = () => {
     } else {
         // Para Edredón y Sábana, usamos la categoría como tipo
         prenda.value.tipo = categoriaSeleccionada.value;
-        // Buscar un ID apropiado o usar uno predeterminado
-        const prendaDefault = prendasDB.find(p => p.tipo.includes(categoriaSeleccionada.value)) || prendasDB[0];
-        prenda.value.idPrenda = prendaDefault.id;
+        
+        // Buscar la prenda exacta por tipo
+        const prendaExacta = prendasDB.find(p => p.tipo === categoriaSeleccionada.value);
+        
+        if (prendaExacta) {
+            // Si encontramos una coincidencia exacta, usar su ID
+            prenda.value.idPrenda = prendaExacta.id;
+            console.log(`Usando ID ${prendaExacta.id} para ${categoriaSeleccionada.value}`);
+        } else {
+            // Si no hay coincidencia exacta, buscar una parcial
+            const prendaParcial = prendasDB.find(p => p.tipo.includes(categoriaSeleccionada.value));
+            
+            if (prendaParcial) {
+                prenda.value.idPrenda = prendaParcial.id;
+                console.log(`Usando ID parcial ${prendaParcial.id} para ${categoriaSeleccionada.value}`);
+            } else {
+                // Si no hay coincidencia, usar un ID específico según la categoría
+                if (categoriaSeleccionada.value === 'Edredón') {
+                    prenda.value.idPrenda = 11; // ID específico para Edredón
+                } else if (categoriaSeleccionada.value === 'Sábana') {
+                    prenda.value.idPrenda = 12; // ID específico para Sábana
+                } else {
+                    // Último recurso: usar el primer ID
+                    prenda.value.idPrenda = prendasDB[0].id;
+                }
+                console.log(`Usando ID fijo ${prenda.value.idPrenda} para ${categoriaSeleccionada.value}`);
+            }
+        }
+        
         prenda.value.color = "N/A"; // No aplica color para estas categorías
     }
     
