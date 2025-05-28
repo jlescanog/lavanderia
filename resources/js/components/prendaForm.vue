@@ -253,11 +253,21 @@ const enviarPrenda = () => {
     const precioUnitario = precioLavado + precioPlanchado;
     
     // Calcular precio total según cantidad o peso
-    if (radioControl.value === "cantidad") {
+    if (radioControl.value === "cantidad" && prenda.value.cantidad > 0) {
         prenda.value.precio = precioUnitario * prenda.value.cantidad;
-    } else {
+    } else if (radioControl.value === "peso" && prenda.value.peso > 0) {
         prenda.value.precio = precioUnitario * prenda.value.peso;
+    } else {
+        // Si no hay cantidad o peso, usar un valor por defecto
+        prenda.value.precio = 0;
     }
+    
+    // Asegurarse de que el precio nunca sea null o undefined
+    if (prenda.value.precio === null || prenda.value.precio === undefined) {
+        prenda.value.precio = 0;
+    }
+    
+    console.log("Precio calculado:", prenda.value.precio, "Precio unitario:", precioUnitario, "Peso:", prenda.value.peso);
     
     // Enviar prenda al componente padre
     emit("prenda-agregada", { ...prenda.value });

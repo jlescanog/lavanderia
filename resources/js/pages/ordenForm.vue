@@ -38,8 +38,8 @@ const prendas = ref([]);
 const pasoConfirmacion = ref(false);
 
 const agregarPrenda = (prenda) => {
-    // Puedes añadir lógica de precio aquí si necesitas
-    prenda.precio = calcularPrecioUnitario(prenda);
+    // El precio ya viene calculado desde el componente prendaForm
+    // No necesitamos recalcularlo aquí
     prendas.value.push(prenda);
 };
 
@@ -59,12 +59,17 @@ const pasarAConfirmacion = () => {
     pasoConfirmacion.value = true;
 };
 
-const calcularPrecioUnitario = (prenda) => {
-    return prenda.cantidad * 5;
-};
-
 const calcularPrecioTotal = () => {
-    return prendas.value.reduce((total, p) => total + p.precio, 0);
+    // Asegurarnos de que cada prenda tenga un precio válido
+    const total = prendas.value.reduce((total, p) => {
+        // Si el precio es undefined, null o NaN, usar 0
+        const precio = p.precio || 0;
+        console.log(`Prenda: ${p.tipo}, Precio: ${precio}`);
+        return total + precio;
+    }, 0);
+    
+    console.log(`Precio total calculado: ${total}`);
+    return total;
 };
 
 const guardarOrden = (orden) => {
