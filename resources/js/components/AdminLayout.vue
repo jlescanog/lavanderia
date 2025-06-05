@@ -25,8 +25,7 @@ const menu = [
     { name: "Órdenes", link: "/ordenes" },
     { name: "Crear Orden", link: "/ordenes/crear" },
     { name: "Clientes", link: "/admin/clientes" },
-    { name: "Reportes", link: "/admin/reportes" },
-    { name: "Ajustes", link: "/admin/ajustes" },
+    { name: "Empleados", link: "/admin/empleados" },
     { name: "Registrar Empleado", link: "/empleado/register" },
 ];
 </script>

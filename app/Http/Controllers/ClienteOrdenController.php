@@ -18,13 +18,16 @@ class ClienteOrdenController extends Controller
                 // Obtener información del pago
                 $pago = $orden->pago;
                 
+                // Priorizar la información de pago directamente de la orden si existe
                 return [
                     'id' => $orden->IdOrden,
                     'total' => $orden->PrecioTotal,
                     'estado' => $orden->Estado,
                     'fecha' => $orden->created_at ? $orden->created_at->format('d/m/Y H:i') : null,
-                    'metodo_pago' => $pago ? $pago->MetodoPago : null,
-                    'estado_pago' => $pago ? $pago->Estado : 'pendiente',
+                    // Usar primero MetodoPago de la orden, luego el del registro de pago si existe
+                    'metodo_pago' => $orden->MetodoPago ?? ($pago ? $pago->MetodoPago : null),
+                    // Usar primero EstadoPago de la orden, luego el del registro de pago si existe
+                    'estado_pago' => $orden->EstadoPago ?? ($pago ? $pago->Estado : 'pendiente'),
                     'detalle_orden' => $orden->detalles->map(function ($detalle) {
                         return [
                             'nombre_prenda' => $detalle->prenda->TipoPrenda ?? 'Prenda eliminada',

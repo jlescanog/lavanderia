@@ -121,6 +121,11 @@ export default {
 
                 const data = await response.json();
                 console.log("Órdenes cargadas:", data);
+                // Depurar estructura de cada orden
+                data.forEach(orden => {
+                    console.log(`Orden ID: ${orden.id} - Estado: ${orden.estado}`);
+                    console.log(`MetodoPago: ${orden.metodo_pago}, EstadoPago: ${orden.estado_pago}`);
+                });
                 this.ordenes = data;
             } catch (error) {
                 console.error("Error al obtener las órdenes", error);

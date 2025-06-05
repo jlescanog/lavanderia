@@ -13,6 +13,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "maatwebsite/excel": "^1.1",
+        "mercadopago/dx-php": "^3.5",
         "stripe/stripe-php": "^17.2",
         "twbs/bootstrap-icons": "^1.11"
     },

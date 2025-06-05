@@ -16,8 +16,10 @@ import dashboard from './Pages/dashboard.vue';
 import clienteOrdenes from './components/clienteOrdenes.vue';
 import perfilCliente from './components/perfilCliente.vue';
 import adminClientes from './pages/adminClientes.vue';
-import CulqiPaymentForm from './components/CulqiPaymentForm.vue';
+import MercadoPagoForm from './components/MercadoPagoForm.vue';
 import PagoOrden from './components/PagoOrden.vue';
+import AdminEmpleados from './components/AdminEmpleados.vue';
+import EmpleadosList from './components/EmpleadosList.vue';
 
 
 // Crear app para navbar si existe el div
@@ -42,6 +44,9 @@ if (appElement) {
         .component('perfil_cliente', perfilCliente)
         .component('admin-clientes', adminClientes)
         .component('pago_orden', PagoOrden)
+        .component('mercado-pago-form', MercadoPagoForm)
+        .component('admin-empleados', AdminEmpleados)
+        .component('empleados-list', EmpleadosList)
         
 
     app.mount('#app');

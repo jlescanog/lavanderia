@@ -25,3 +25,12 @@ Route::get('/consultar-dni', [DniController::class, 'consultarDni']);
 // Rutas para exportación
 Route::get('/exportar/ordenes/excel', [ExportController::class, 'exportarOrdenesExcel']);
 Route::get('/exportar/ordenes/pdf', [ExportController::class, 'exportarOrdenesPDF']);
+
+// Rutas para MercadoPago
+Route::get('/mercadopago/config', [\App\Http\Controllers\MercadoPagoController::class, 'getConfig']);
+Route::get('/mercadopago/verificar-conexion', [\App\Http\Controllers\MercadoPagoController::class, 'verificarConexion']);
+Route::get('/mercadopago/errores', [\App\Http\Controllers\MercadoPagoController::class, 'mostrarErrores']);
+Route::post('/mercadopago/procesar-pago', [\App\Http\Controllers\MercadoPagoController::class, 'procesarPago']);
+
+// Ruta para obtener empleados - accesible desde el panel de administración
+Route::get('/empleados', [\App\Http\Controllers\EmpleadoController::class, 'index']);

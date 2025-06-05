@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid mt-5">
+    <div class="home-container">
         <div class="row justify-content-around mt-5">
             <a
                 href="/login"
@@ -94,5 +94,24 @@ export default {
 .card-link {
     color: inherit;
     text-decoration: none;
+}
+
+.home-container {
+    background-image: url('/images/lavanderia-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    padding-top: 5rem;
+}
+
+.btn {
+    background-color: rgba(255, 255, 255, 0.9);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 </style>

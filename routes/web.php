@@ -15,16 +15,21 @@ Route::get('/', function () {
 
 // RUTAS DE LOGIN Y REGISTRO PARA CLIENTES (públicas)
 Route::get('/login', function () {
-    return view('auth/login');
+    return view('auth.login');
 })->name('login');
 
 Route::get('/register', function () {
-    return view('auth/register');
+    return view('auth.register');
 });
 
 Route::middleware(['web'])->group(function () {
     Route::post('/empleado/login', [EmpleadoAuthController::class, 'login']);
     Route::post('/cliente/login', [ClienteAuthController::class, 'login']);
+    
+    // Rutas para MercadoPago
+    Route::get('/pago/exitoso', [\App\Http\Controllers\MercadoPagoController::class, 'pagoExitoso'])->name('pago.exitoso');
+    Route::get('/pago/error', [\App\Http\Controllers\MercadoPagoController::class, 'pagoError'])->name('pago.error');
+    Route::get('/pago/pendiente', [\App\Http\Controllers\MercadoPagoController::class, 'pagoPendiente'])->name('pago.pendiente');
 });
 
 // LOGIN DE EMPLEADOS
@@ -63,6 +68,10 @@ Route::middleware(['auth:empleados'])->group(function () {
     Route::get('/empleado/register', function () {
         return view('auth/registerEmpleado');
     });
+
+    Route::get('/admin/empleados', function () {
+        return view('pages/adminEmpleados');
+    });
 });
 
 // RUTAS PROTEGIDAS PARA CLIENTES
@@ -83,13 +92,13 @@ Route::middleware(['auth:clientes'])->group(function () {
     Route::post('/api/cliente/perfil/actualizar', [App\Http\Controllers\ClientePerfilController::class, 'actualizar']);
     Route::get('/api/cliente/ordenes/estadisticas', [App\Http\Controllers\ClientePerfilController::class, 'estadisticas']);
     
-    // Rutas para el pago con Culqi
+    // Rutas para el pago con MercadoPago
+    Route::get('/cliente/pago/exito', [App\Http\Controllers\MercadoPagoController::class, 'pagoExitoso'])->name('pago.exitoso');
+    Route::get('/cliente/pago/error', [App\Http\Controllers\MercadoPagoController::class, 'pagoError'])->name('pago.error');
+    Route::get('/cliente/pago/pendiente', [App\Http\Controllers\MercadoPagoController::class, 'pagoPendiente'])->name('pago.pendiente');
     Route::get('/cliente/pago/{orden_id}', function ($orden_id) {
         return view('pages.pagoOrden', ['orden_id' => $orden_id]);
     });
-    Route::get('/cliente/pago/exito', [App\Http\Controllers\CulqiController::class, 'exitoPago']);
-    Route::get('/cliente/pago/error', [App\Http\Controllers\CulqiController::class, 'errorPago']);
-    Route::post('/api/culqi/crear-cargo', [App\Http\Controllers\CulqiController::class, 'crearCargo']);
     Route::get('/api/cliente/orden/{id}', function ($id) {
         $orden = App\Models\Orden::with(['detalles.prenda', 'pago'])->findOrFail($id);
         return response()->json($orden);

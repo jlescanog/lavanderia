@@ -17,7 +17,7 @@
                         </div>
                         <h2 class="mb-3">¡Pago Realizado con Éxito!</h2>
                         <p class="lead mb-4">
-                            Tu pago por S/. {{ number_format($monto, 2) }} ha sido procesado correctamente.
+                            ¡Tu pago ha sido procesado correctamente!
                         </p>
                         <p class="mb-4">
                             Número de orden: <strong>#{{ $orden_id }}</strong>

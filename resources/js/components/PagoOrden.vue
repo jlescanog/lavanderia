@@ -80,10 +80,14 @@
             
             <!-- Formulario de pago -->
             <div class="col-md-7">
-                <culqi-payment-form 
-                    v-if="orden" 
-                    :orden-id="orden.IdOrden" 
-                    :total="orden.PrecioTotal"
+                <div v-if="orden && !cargando" class="debug-info alert alert-info mb-3">
+                    Orden cargada ID: {{ orden.id || orden.IdOrden }}, Total: {{ orden.total || orden.PrecioTotal }}
+                </div>
+                
+                <mercado-pago-form 
+                    v-if="orden && !cargando" 
+                    :orden-id="orden.id || orden.IdOrden" 
+                    :total="orden.total || orden.PrecioTotal"
                     @cancel="volverAOrdenes"
                 />
             </div>
@@ -93,12 +97,12 @@
 
 <script>
 import axios from 'axios';
-import CulqiPaymentForm from './CulqiPaymentForm.vue';
+import MercadoPagoForm from './MercadoPagoForm.vue';
 
 export default {
     name: 'PagoOrden',
     components: {
-        CulqiPaymentForm
+        MercadoPagoForm
     },
     props: {
         orden_id: {
@@ -151,6 +155,7 @@ export default {
             try {
                 const response = await axios.get(`/api/cliente/orden/${this.orden_id}`);
                 this.orden = response.data;
+                console.log('Orden cargada:', this.orden);
                 
                 // Verificar si la orden ya está pagada
                 if (this.orden.pago && this.orden.pago.Estado === 'completado') {

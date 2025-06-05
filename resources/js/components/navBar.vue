@@ -94,12 +94,26 @@ const isLoading = ref(true);
 
 onMounted(async () => {
     try {
-        // Realiza la solicitud a la API para obtener el cliente autenticado
-        let response = await axios.get("/api/user");
-        userName.value = response.data.Nombre || "Usuario"; // Asignamos el nombre del cliente
-        console.log("Usuario cargado:", userName.value);
+        // Verificar si estamos en una página que requiere autenticación
+        // Si no lo estamos, no intentaremos cargar el usuario para evitar errores 401
+        const pageRequiresAuth = window.location.pathname.includes('/dashboard') || 
+                               window.location.pathname.includes('/admin');
+                               
+        if (pageRequiresAuth) {
+            // Realiza la solicitud a la API para obtener el cliente autenticado
+            let response = await axios.get("/api/user");
+            userName.value = response.data.Nombre || "Usuario"; // Asignamos el nombre del cliente
+            console.log("Usuario cargado:", userName.value);
+        } else {
+            console.log("Página pública, no se cargará usuario");
+        }
     } catch (error) {
-        console.error("No se pudo cargar el cliente:", error);
+        // Si hay un error 401, simplemente asumimos que no hay usuario autenticado
+        if (error.response && error.response.status === 401) {
+            console.log("Usuario no autenticado");
+        } else {
+            console.error("No se pudo cargar el cliente:", error);
+        }
     } finally {
         isLoading.value = false;
     }

@@ -1,6 +1,6 @@
 <template>
     <div
-        class="container d-flex justify-content-center h-100 align-items-center"
+        class="login-container d-flex justify-content-center h-100 align-items-center"
     >
         <form @submit.prevent="login">
             <!-- Email input -->
@@ -94,6 +94,25 @@
         </form>
     </div>
 </template>
+
+<style scoped>
+.login-container {
+    background-image: url('/images/lavanderia-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
+form {
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    max-width: 450px;
+    width: 100%;
+}
+</style>
 
 <script setup>
 import { ref } from "vue";

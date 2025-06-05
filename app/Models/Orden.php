@@ -21,7 +21,10 @@ class Orden extends Model
         'Estado',
         'PrecioTotal',
         'ACuenta',
-        'Saldo'
+        'Saldo',
+        'MetodoPago',
+        'EstadoPago',
+        'FechaPago'
     ];
 
     public $timestamps = true;

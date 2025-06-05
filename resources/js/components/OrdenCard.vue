@@ -44,13 +44,13 @@
                 </ul>
             </div>
 
-            <!-- Botón de pago con Stripe si corresponde -->
+            <!-- Botón de pago con MercadoPago si corresponde -->
             <div v-if="mostrarBotonPago" class="mt-3">
                 <a :href="`/cliente/pago/${orden.id}`" class="btn btn-primary w-100">
                     <i class="bi bi-credit-card me-2"></i> Pagar ahora
                 </a>
-                <p class="text-muted small text-center mt-2">
-                    <i class="bi bi-shield-lock me-1"></i> Pago seguro procesado por Stripe
+                <p class="text-center mt-3 mb-0 text-muted">
+                    <small><i class="bi bi-shield-check me-1"></i> Pago seguro procesado por MercadoPago</small>
                 </p>
             </div>
         </div>
@@ -67,14 +67,15 @@ export default {
         },
     },
     computed: {
-        // Determinar si se debe mostrar el botón de pago con Culqi
+        // Determinar si se debe mostrar el botón de pago
         mostrarBotonPago() {
             // Mostrar el botón si:
-            // 1. El método de pago es Tarjeta
+            // 1. El método de pago es Tarjeta o no está definido (pago pendiente)
             // 2. El estado de pago es pendiente o no está definido
-            // 3. La orden no está finalizada
-            return this.orden.metodo_pago === 'Tarjeta' && 
+            // 3. La orden no está en estado Pagada ni finalizada
+            return (this.orden.metodo_pago === 'Tarjeta' || !this.orden.metodo_pago) && 
                    (this.orden.estado_pago === 'pendiente' || !this.orden.estado_pago) &&
+                   this.orden.estado !== 'Pagada' &&
                    this.orden.estado !== 'finalizado';
         },
         
